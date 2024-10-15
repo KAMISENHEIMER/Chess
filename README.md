@@ -7,7 +7,7 @@ Team Members:
 * Gentry Rabe       (mot8)
 
 Class:
-Object Oriented Programming
-CS 3354
-Section 3 
-at Texas State University
+Object Oriented Programming\
+CS 3354\
+Section 3\
+at Texas State University\

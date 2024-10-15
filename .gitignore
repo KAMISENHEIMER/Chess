@@ -1,1 +1,7 @@
-#nothing to ignore yet, update as needed
+#IDE folders
+.vs/
+.vscode/
+.idea/
+
+#compiled files
+*.class
