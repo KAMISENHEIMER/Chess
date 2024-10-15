@@ -1,7 +1,10 @@
+import Utility.Enums.*;
+
+
 public abstract class Piece {
 
-    String color;
-    String location;
+    Color color;
+    Location location;
 
     public abstract String[] getMoves();
 }
