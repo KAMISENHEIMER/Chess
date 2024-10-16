@@ -5,12 +5,9 @@ import Utility.Enums.*;
 public class Main {
     public static void main(String[] args) {
 
-        //test all location constructors
-        Pawn p = new Pawn(Color.White,new Location(0,0));
-        System.out.println(p);
+        Board b = new Board();
 
-        King k = new King(Color.Black,new Location(0,0));
-        System.out.println(k);
+        System.out.println(b);
 
     }
 }
