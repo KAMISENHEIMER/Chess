@@ -1,4 +1,4 @@
-# Collaboratively Created Chess Application.
+# Collaboratively Created Chess Application
 Focused on utilizing Object Oriented Principles, creating a clean and simple GUI, and designing machine learning opponents. 
 
 Team Members:
@@ -10,4 +10,4 @@ Class:
 Object Oriented Programming\
 CS 3354\
 Section 3\
-at Texas State University\
+at Texas State University
