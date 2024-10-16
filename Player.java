@@ -1,41 +1,50 @@
+import Classes.Piece;
+import Utility.Enums.Color;
+
+import java.util.ArrayList;
+
 public class Player{
-    private Piece[] pieces;
-    private String color;
+    private ArrayList<Piece> pieces;
+    private Color color;
+
+    public Player(Color color) {
+        this.color = color;
+        pieces = new ArrayList<Piece>();
+    }
+
     public boolean makeMove(String tryStr){
+
+        //castling
         if(tryStr.equals("O-O") || tryStr.equals("O-O-O")){
             return true;
         }
-        if(tryStr.length() == 5){
-            boolean checkFlag = true;
-            if(tryStr.charAt(0) < 65 || tryStr.charAt(3) > 72){
+
+        boolean checkFlag = tryStr.length() == 5 || tryStr.length() == 7;
+
+        //2 locations (move)
+        if(checkFlag){
+            if(tryStr.charAt(0) < 'A' || tryStr.charAt(0) > 'H' || tryStr.charAt(3) < 'A' || tryStr.charAt(3) > 'H'){
                 checkFlag = false;
             }
-            if(tryStr.charAt(1) < 49 || tryStr.charAt(4) > 56){
+            if(tryStr.charAt(1) < '1' || tryStr.charAt(1) > '8' || tryStr.charAt(4) < '1' || tryStr.charAt(4) > '8'){
                 checkFlag = false;
             }
-            if(tryStr.charAt(2) != 32){
+            if(tryStr.charAt(2) != ' '){
                 checkFlag = false;
             }
+
+            //pawn promotion
+            if(tryStr.length() == 7) {
+                if(tryStr.charAt(5) != '='){
+                    checkFlag = false;
+                }
+                if(tryStr.charAt(6) != 'Q' && tryStr.charAt(6) != 'N' && tryStr.charAt(6) != 'R' && tryStr.charAt(6) != 'B'){
+                    checkFlag = false;
+                }
+            }
+
             return checkFlag;
-        }else if(tryStr.length() == 7){
-            boolean checkFlag = true;
-            if(tryStr.charAt(0) < 65 || tryStr.charAt(3) > 72){
-                checkFlag = false;
-            }
-            if(tryStr.charAt(1) < 49 || tryStr.charAt(4) > 56){
-                checkFlag = false;
-            }
-            if(tryStr.charAt(2) != 32){
-                checkFlag = false;
-            }
-            if(tryStr.charAt(5) != 61){
-                checkFlag = false;
-            }
-            if(tryStr.charAt(6) != 66 && tryStr.charAt(6) != 78 && tryStr.charAt(6) != 81 && tryStr.charAt(6) != 82){
-                checkFlag = false;
-            }
-            return checkFlag;
-        }else{
+        } else{     //not length 5 or 7
             return false;
         }
     }
