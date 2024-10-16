@@ -1,3 +1,5 @@
+package Classes;
+
 import Utility.Enums.Coordinate;
 
 public class Location {
