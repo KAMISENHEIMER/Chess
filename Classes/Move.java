@@ -32,8 +32,8 @@ public class Move {
 
     //pawn promotion from strings
     public Move(String from, String to, char promoteTo) {
-        this.from = new Location(from.charAt(0),from.charAt(1));
-        this.to = new Location(to.charAt(0),to.charAt(1));
+        this.from = new Location(from);
+        this.to = new Location(to);
         this.promoteTo = promoteTo;
     }
 

@@ -41,6 +41,6 @@ public class Location {
 
     @Override
     public String toString() {
-        return row.name() + (col.ordinal() + 1);
+        return col.name() + (row.ordinal() + 1);
     }
 }

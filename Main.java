@@ -7,16 +7,9 @@ public class Main {
 
         Board board = new Board();
 
-        Piece piece = board.pieceAt(4,3);
-        ArrayList<Move> moves = piece.getMoves(board);
-
-        System.out.println(moves);
-
+        Piece piece = board.pieceAt(3,7);
         System.out.println(board);
-
-        Game game = new Game();
-        game.start();
-
+        System.out.println(piece);
 
 
     }
