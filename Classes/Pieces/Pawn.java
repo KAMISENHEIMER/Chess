@@ -1,5 +1,6 @@
 package Classes.Pieces;
 
+import Classes.Board;
 import Classes.Location;
 import Classes.Move;
 import Classes.Piece;
@@ -15,8 +16,7 @@ public class Pawn extends Piece {
         super(color, location);
     }
 
-    @Override
-    public ArrayList<Move> getMoves() {
+    public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
         return moves;
     }

@@ -32,7 +32,7 @@ public abstract class Piece {
         int j = currLocation.colIndex() + colInc;
         while(i <= 7 && j <= 7 && i >= 0 && j >= 0){
             Move newMove = new Move(currLocation, new Location(i,j));
-            if(board.pieceAt(i, j)){ // if board has a piece at possible move
+            if(!(board.pieceAt(i, j) == null)){ // if board has a piece at possible move
                 if(board.pieceAt(i,j).getColor() == this.getColor()){
                     // same color, move isn't legal
                     break;

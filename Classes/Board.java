@@ -15,7 +15,7 @@ public class Board{
                 { null, null, null, null, null, null, null, null },
                 { null, null, null, null, null, null, null, null },
                 { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
+                { null, null, null, new Bishop(Color.White, new Location(3,4)), null, null, null, null },
                 { null, null, null, null, null, null, null, null },
                 { null, null, null, null, null, null, null, null },
                 { new Rook(Color.Black, new Location(7,0)), new Knight(Color.Black, new Location(7,1)), new Bishop(Color.Black, new Location(7,2)), new Queen(Color.Black, new Location(7,3)), new King(Color.Black, new Location(7,4)), new Bishop(Color.Black, new Location(7,5)), new Knight(Color.Black, new Location(7,6)), new Rook(Color.Black, new Location(7,7)) }
@@ -30,6 +30,12 @@ public class Board{
 
     public Piece pieceAt(int row, int col) {
         return board[row][col];
+    }
+
+    public Piece pieceAt(Location location) {
+        //return board[location.colIndex()][location.rowIndex()];
+        return board[location.rowIndex()][location.colIndex()];
+
     }
 
     @Override

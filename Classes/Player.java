@@ -19,19 +19,20 @@ public class Player{
         return color;
     }
 
-    public ArrayList<Move> getMoves() {
+    public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
         for (Piece piece: pieces) {
-            moves.addAll(piece.getMoves());
+            moves.addAll(piece.getMoves(board));
         }
         return moves;
     }
 
-    public boolean makeMove(String tryStr){
+
+    public Move makeMove(String tryStr){
 
         //castling
         if(tryStr.equals("O-O") || tryStr.equals("O-O-O")){
-            return true;
+            return new Move(tryStr);
         }
 
         boolean checkFlag = tryStr.length() == 5 || tryStr.length() == 7;
@@ -58,9 +59,15 @@ public class Player{
                 }
             }
 
-            return checkFlag;
+            if (checkFlag && tryStr.length() == 5) {
+                return new Move(tryStr.substring(0,2),tryStr.substring(3,5));
+            } else if (checkFlag && tryStr.length() == 7) {
+                return new Move(tryStr.substring(0,2),tryStr.substring(3,5), tryStr.charAt(6));
+            } else {
+                return null;
+            }
         } else{     //not length 5 or 7
-            return false;
+            return null;
         }
     }
 }

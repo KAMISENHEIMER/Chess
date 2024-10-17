@@ -1,4 +1,13 @@
-import Scanner.java;
+package Classes;
+
+import Classes.Board;
+import Classes.Move;
+import Classes.Player;
+import Utility.Enums.Color;
+import java.util.ArrayList;
+
+
+import java.util.Scanner;
 
 public class Game{
     //class vars
@@ -20,7 +29,7 @@ public class Game{
         while(gameRunning){
             play();
         }
-        end();
+        //end();
     }
     //game loop method
     public void play(){
@@ -30,7 +39,7 @@ public class Game{
         System.out.println("Please enter your move: ");
         Move move = getValidMove();
 
-        //Game takes response, filters for illegal moves
+        //Classes.Game takes response, filters for illegal moves
         //first attempts non-castling moves
         if(!move.castleLeft && !move.castleRight){
             //checks if the move is a legal chess move.
@@ -46,24 +55,26 @@ public class Game{
     public Move getValidMove(){
         Scanner scnr = new Scanner(System.in);
         String moveAttempt = scnr.nextLine();
-        Move retMove = makeMove(moveAttempt);
+        Move retMove = currentPlayer.makeMove(moveAttempt);
         while(retMove == null){
             System.out.println("Please enter a valid move:");
             moveAttempt = scnr.nextLine();
-            retMove = makeMove(moveAttempt);
+            retMove = currentPlayer.makeMove(moveAttempt);
         }
         return retMove;
     }
     public boolean checkLegalMove(Move move){
         //checks if there is a piece to move. Loops otherwise
-        if(!board.pieceAt(move.from)){
+        if(!(board.pieceAt(move.getFrom())==null)){
             return false;
         }
         // Loops otherwise
         boolean legalMove = false;
-        legalMoves<Move> = getMoves();
-        for(int i = 0; i < legalMoves.length; i++){
-            legalMoves[i] = move ? (legalMove = true);
+        ArrayList<Move> legalMoves = board.pieceAt(move.getFrom()).getMoves(board);
+        for(int i = 0; i < legalMoves.size(); i++) {
+            if (legalMoves.get(i) == move) {
+                legalMove = true;
+            }
         }
         return legalMove;
     }
