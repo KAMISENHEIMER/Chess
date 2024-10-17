@@ -5,6 +5,8 @@ import Classes.Move;
 import Classes.Piece;
 import Utility.Enums;
 
+import java.util.ArrayList;
+
 public class Knight extends Piece {
 
     public Knight(Enums.Color color, Location location) {
@@ -12,8 +14,9 @@ public class Knight extends Piece {
     }
 
     @Override
-    public Move[] getMoves() {
-        return new Move[0];
+    public ArrayList<Move> getMoves() {
+        ArrayList<Move> moves = new ArrayList<Move>();
+        return moves;
     }
 
     @Override
