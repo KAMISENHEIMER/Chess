@@ -1,9 +1,12 @@
 package Classes.Pieces;
 
+import Classes.Board;
 import Classes.Location;
 import Classes.Move;
 import Classes.Piece;
 import Utility.Enums.*;
+
+import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
@@ -13,9 +16,9 @@ public class Pawn extends Piece {
         super(color, location);
     }
 
-    @Override
-    public Move[] getMoves() {
-        return new Move[0];
+    public ArrayList<Move> getMoves(Board board) {
+        ArrayList<Move> moves = new ArrayList<Move>();
+        return moves;
     }
 
     @Override

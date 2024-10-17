@@ -7,8 +7,8 @@ public class Move {
     private Location to;
 
     private char promoteTo = 0;     //only used for pawn promotion, char represents piece to upgrade to
-    private boolean castleLeft;    //(long side)  only used for castling
-    private boolean castleRight;   //(short side) only used for castling
+    public boolean castleLeft;    //(long side)  only used for castling
+    public boolean castleRight;   //(short side) only used for castling
 
 
     //constructor using 2 locations
@@ -19,14 +19,21 @@ public class Move {
 
     //constructor turning 2 strings into 2 constructors
     public Move(String from, String to) {
-        this.from = new Location(from.charAt(0),from.charAt(1));
-        this.to = new Location(to.charAt(0),to.charAt(1));
+        this.from = new Location(from);
+        this.to = new Location(to);
     }
 
     //pawn promotion
     public Move(Location from, Location to, char promoteTo) {
         this.from = from;
         this.to = to;
+        this.promoteTo = promoteTo;
+    }
+
+    //pawn promotion from strings
+    public Move(String from, String to, char promoteTo) {
+        this.from = new Location(from);
+        this.to = new Location(to);
         this.promoteTo = promoteTo;
     }
 
@@ -37,6 +44,10 @@ public class Move {
         } else if (castle.equals("O-O-O")) {
             castleLeft = true;
         }
+    }
+
+    public Location getFrom() {
+        return from;
     }
 
     @Override
