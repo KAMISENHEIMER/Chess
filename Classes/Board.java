@@ -1,3 +1,5 @@
+package Classes;
+
 import Classes.Location;
 import Classes.Piece;
 import Classes.Pieces.*;
@@ -24,6 +26,10 @@ public class Board{
         for(int i = 0 ; i < 8; i++){
             board[6][i] = new Pawn(Color.Black, new Location(1,i));
         }
+    }
+
+    public Piece pieceAt(int row, int col) {
+        return board[row][col];
     }
 
     @Override

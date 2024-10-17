@@ -1,3 +1,6 @@
+package Classes;
+
+import Classes.Move;
 import Classes.Piece;
 import Utility.Enums.Color;
 
@@ -10,6 +13,18 @@ public class Player{
     public Player(Color color) {
         this.color = color;
         pieces = new ArrayList<Piece>();
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public ArrayList<Move> getMoves() {
+        ArrayList<Move> moves = new ArrayList<Move>();
+        for (Piece piece: pieces) {
+            moves.addAll(piece.getMoves());
+        }
+        return moves;
     }
 
     public boolean makeMove(String tryStr){
