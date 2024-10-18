@@ -40,16 +40,11 @@ public class Game{
         Move move = getValidMove();
 
         //Classes.Game takes response, filters for illegal moves
-        //first attempts non-castling moves
-        if(!move.castleLeft && !move.castleRight){
-            //checks if the move is a legal chess move.
-            while(!checkLegalMove(move)) {
-                move = getValidMove();
-            }
-            //perform the move
-        }else{
-            //castle
+        while(!checkLegalMove(move)) {
+            move = getValidMove();
         }
+        //perform the move
+        board.movePiece(move, currentPlayer);
     }
     //methods for checking move
     public Move getValidMove(){
