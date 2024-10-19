@@ -38,6 +38,8 @@ public class Board{
         for(int i = 0 ; i < 8; i++){
             board[i][6] = new Pawn(Color.Black, new Location(i,6));
         }
+
+        capturedPieces = new ArrayList<Piece>();
     }
 
     /**
@@ -131,6 +133,7 @@ public class Board{
         //otherwise, simply move piece
         capturePiece(to,player);
         board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
+        board[to.colIndex()][to.rowIndex()].move(to);
         board[from.colIndex()][from.rowIndex()] = null;
     }
 
