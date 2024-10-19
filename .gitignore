@@ -6,3 +6,4 @@ out/
 
 #compiled files
 *.class
+*.iml

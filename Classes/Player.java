@@ -6,19 +6,43 @@ import Utility.Enums.Color;
 
 import java.util.ArrayList;
 
+/**
+ * Player class, contains an array of all pieces of that player, and their color
+ */
 public class Player{
     private ArrayList<Piece> pieces;
     private Color color;
 
+    /**
+     * Player constructor
+     * @param color     assigns color to this player
+     */
     public Player(Color color) {
         this.color = color;
         pieces = new ArrayList<Piece>();
     }
 
+    /**
+     * gets value stored in color variable
+     * @return      the color of the player
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * gets the pieces array for updating
+     * @return  the pieces array
+     */
+    public ArrayList<Piece> getPieces() {
+        return pieces;
+    }
+
+    /**
+     * gets all possible pieces a player can make, if this is 0, then a player is in stalemate
+     * @param board     the current state of the board
+     * @return          the all the possible moves a player can make
+     */
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
         for (Piece piece: pieces) {
@@ -27,7 +51,13 @@ public class Player{
         return moves;
     }
 
+    // this probably shouldn't be in player, it doesn't really have anything to do with the player
 
+    /**
+     * tries to make a move object based on a string
+     * @param tryStr    the attempted move as a string, ex: "A1 B2"
+     * @return          the move as a move object, or null if that is not correct notation
+     */
     public Move makeMove(String tryStr){
 
         //castling
