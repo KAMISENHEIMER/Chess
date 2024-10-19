@@ -17,6 +17,49 @@ public class Knight extends Piece {
     @Override
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
+        Location checkLocation = null;
+
+        // check +1 col, +2 row
+        if(canMove(this.location, 1, 2, board)){
+            checkLocation = new Location(this.location.colIndex() + 1, this.location.rowIndex() + 2);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check +2 col, +1 row
+        if(canMove(this.location, 2, 1, board)){
+            checkLocation = new Location(this.location.colIndex() + 2, this.location.rowIndex() + 1);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check +2 col, -1 row
+        if(canMove(this.location, 2, -1, board)){
+            checkLocation = new Location(this.location.colIndex() + 2, this.location.rowIndex() - 1);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check +1 col, -2 row
+        if(canMove(this.location, 1, -2, board)){
+            checkLocation = new Location(this.location.colIndex() + 1, this.location.rowIndex() - 2);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check -1 col, -2 row
+        if(canMove(this.location, -1, -2, board)){
+            checkLocation = new Location(this.location.colIndex() - 1, this.location.rowIndex() - 2);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check -2 col, -1 row
+        if(canMove(this.location, -2, -1, board)){
+            checkLocation = new Location(this.location.colIndex() - 2, this.location.rowIndex() - 1);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check -2 col, +1 row
+        if(canMove(this.location, -2, 1, board)){
+            checkLocation = new Location(this.location.colIndex() - 2, this.location.rowIndex() + 1);
+            moves.add(new Move(this.location, checkLocation));
+        }
+        // check -1 col, +2 row
+        if(canMove(this.location, -1, 2, board)){
+            checkLocation = new Location(this.location.colIndex() - 1, this.location.rowIndex() + 2);
+            moves.add(new Move(this.location, checkLocation));
+        }
+
         return moves;
     }
 
