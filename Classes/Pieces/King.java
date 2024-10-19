@@ -25,7 +25,7 @@ public class King extends Piece {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; i <= 1; i++) {
                 if (canMove(this.location,i,j,board)) {
-                    moves.add(new Move(this.location,new Location(this.location.colIndex()+i,this.location.rowIndex()+j)))
+                    moves.add(new Move(this.location,new Location(this.location.colIndex()+i,this.location.rowIndex()+j)));
                 }
             }
         }

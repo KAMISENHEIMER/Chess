@@ -54,6 +54,13 @@ public class Move {
         return to;
     }
 
+    //
+    @Override
+    public boolean equals(Object o)
+    {
+        return o.toString().equals(this.toString());
+    }
+
     @Override
     public String toString() {
         if (castleRight) {

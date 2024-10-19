@@ -29,7 +29,7 @@ public class Location {
     //makes a location based on a string
     public Location(String location) {
         this.col = Coordinate.valueOf(location.substring(0,1));     //the first value (col) comes from the letter
-        this.row = Coordinate.values[Integer.parseInt(location.substring(1,2))];        //second value (row) comes from the number
+        this.row = Coordinate.values[Integer.parseInt(location.substring(1,2))-1];        //second value (row) comes from the number
     }
 
     public int colIndex() {

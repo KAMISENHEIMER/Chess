@@ -58,7 +58,7 @@ public abstract class Piece {
             return false;
         }
 
-        Location checkLocation = new Location(currLocation.rowIndex() + rowDir, currLocation.colIndex() + colDir);
+        Location checkLocation = new Location(currLocation.colIndex() + colDir, currLocation.rowIndex() + rowDir);
         if(board.pieceAt(checkLocation) != null){
             if(board.pieceAt(checkLocation).getColor().equals(this.getColor())) { // if same color
                 return false; // invalid move
