@@ -44,6 +44,7 @@ public class Game{
 
         //Classes.Game takes response, filters for illegal moves
         while(!checkLegalMove(move)) {
+            System.out.println("Please enter a legal move:");
             move = getValidMove();
         }
         //perform the move

@@ -18,7 +18,20 @@ public class King extends Piece {
 
     @Override
     public ArrayList<Move> getMoves(Board board) {
+
         ArrayList<Move> moves = new ArrayList<Move>();
+
+        //check all adjacent locations (dont after worry about moving onto itself because of other checks in place)
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; i <= 1; i++) {
+                if (canMove(this.location,i,j,board)) {
+                    moves.add(new Move(this.location,new Location(this.location.colIndex()+i,this.location.rowIndex()+j)))
+                }
+            }
+        }
+
+        //TODO add castling if both rook and king not moved and spaces between empty
+
         return moves;
     }
 
