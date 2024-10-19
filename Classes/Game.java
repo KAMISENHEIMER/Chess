@@ -22,10 +22,11 @@ public class Game{
         this.black = new Player(Color.Black);
         this.currentPlayer = this.white;
         this.board = new Board();
-        this.gameRunning = true;
+        this.gameRunning = false;
     }
     //starting method
     public void start(){
+        gameRunning = true;
         while(gameRunning){
             play();
         }
@@ -33,6 +34,8 @@ public class Game{
     }
     //game loop method
     public void play(){
+
+        System.out.println(board);
 
         //Player input, filter for bad formatting
         System.out.println("Current player: " + currentPlayer.getColor());
@@ -60,18 +63,11 @@ public class Game{
     }
     public boolean checkLegalMove(Move move){
         //checks if there is a piece to move. Loops otherwise
-        if(!(board.pieceAt(move.getFrom())==null)){
+        if(board.pieceAt(move.getFrom())==null){
             return false;
         }
-        // Loops otherwise
-        boolean legalMove = false;
-        ArrayList<Move> legalMoves = board.pieceAt(move.getFrom()).getMoves(board);
-        for(int i = 0; i < legalMoves.size(); i++) {
-            if (legalMoves.get(i) == move) {
-                legalMove = true;
-            }
-        }
-        return legalMove;
+
+        return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
     }
 
 }

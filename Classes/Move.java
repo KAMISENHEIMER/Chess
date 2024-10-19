@@ -50,6 +50,10 @@ public class Move {
         return from;
     }
 
+    public Location getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
         if (castleRight) {

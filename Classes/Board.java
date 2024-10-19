@@ -68,7 +68,7 @@ public class Board{
     //
     public void movePiece(Move move, Player player){
         if(move.castleLeft){
-            int row = (player.getColor() == Color.white ? 0 : 7);
+            int row = (player.getColor() == Color.White ? 0 : 7);
             //rook swaps to spot
             board[3][row] = board[0][row];
             //king swaps to spot
@@ -80,7 +80,7 @@ public class Board{
             return;
         }
         if(move.castleRight){
-            int row = (player.getColor() == Color.white ? 0 : 7);
+            int row = (player.getColor() == Color.White ? 0 : 7);
             //rook swaps to spot
             board[5][row] = board[7][row];
             //king swaps to spot
@@ -92,9 +92,9 @@ public class Board{
             return;
         }
         Location from = move.getFrom();
-        Location from = move.getTo();
+        Location to = move.getTo();
         //otherwise, simply move piece
-        board[to.col][to.row] = board[from.col][from.row];
-        board[from.col][from.row] = null;
+        board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
+        board[from.colIndex()][from.rowIndex()] = null;
     }
 }
