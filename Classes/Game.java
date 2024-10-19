@@ -9,22 +9,46 @@ import java.util.ArrayList;
 
 import java.util.Scanner;
 
+/**
+ * Game class, contains all variables related to the game (such as the players and the board), and all methods involving the chess game loop
+ */
 public class Game{
     //class vars
     private Player currentPlayer;
     private boolean gameRunning;
     private Board board;
-    private Player white;
+    public Player white;
     private Player black;
     //constructor
+
+    /**
+     * Game constructor, initializes all variables, and adds all pieces to their respective player lists
+     */
     public Game(){
         this.white = new Player(Color.White);
         this.black = new Player(Color.Black);
         this.currentPlayer = this.white;
         this.board = new Board();
         this.gameRunning = false;
+
+        //add all pieces to their respective players
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                white.getPieces().add(board.pieceAt(j,i));
+            }
+        }
+        for (int i = 6; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                black.getPieces().add(board.pieceAt(j,i));
+            }
+        }
+
     }
     //starting method
+
+    /**
+     * begins the game loop
+     */
     public void start(){
         gameRunning = true;
         while(gameRunning){
@@ -33,6 +57,10 @@ public class Game{
         //end();
     }
     //game loop method
+
+    /**
+     * represents one turn of the game, prints the board, instructions, and accepts a valid and legal input to move a piece to.
+     */
     public void play(){
 
         System.out.println(board);
@@ -51,6 +79,11 @@ public class Game{
         board.movePiece(move, currentPlayer);
     }
     //methods for checking move
+
+    /**
+     * Repeatedly asks for a valid move until it gets one
+     * @return      the valid move
+     */
     public Move getValidMove(){
         Scanner scnr = new Scanner(System.in);
         String moveAttempt = scnr.nextLine();
@@ -62,6 +95,12 @@ public class Game{
         }
         return retMove;
     }
+
+    /**
+     * Repeatedly asks for a move that actually exists as a possible move
+     * @param move      the move to check
+     * @return
+     */
     public boolean checkLegalMove(Move move){
         //checks if there is a piece to move. Loops otherwise
         if(board.pieceAt(move.getFrom())==null){

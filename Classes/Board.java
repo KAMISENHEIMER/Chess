@@ -5,13 +5,23 @@ import Classes.Piece;
 import Classes.Pieces.*;
 import Utility.Enums.Color;
 
+import java.util.ArrayList;
+
+/**
+ * Board object, contains the 2D array that holds all the references to the pieces, and a list of captured pieces.
+ */
 public class Board{
 
     private Piece[][] board;
 
+    private ArrayList<Piece> capturedPieces;
+
+    /**
+     * Board defualt constructor, initializes a chess board with all the pieces in the right spots, in (column, row) notation.
+     */
     public Board() {
 
-        board = new Piece[][]{
+        board = new Piece[][]{      //board needs to be build sideways, to maintain col, row notation
             { new Rook(Color.White, new Location(0,0)), null, null, null, null, null, null, new Rook(Color.Black, new Location(0,7)) },
             { new Knight(Color.White, new Location(1,0)), null, null, null, null, null, null, new Knight(Color.Black, new Location(1,7)) },
             { new Bishop(Color.White, new Location(2,0)), null, null, null, null, null, null, new Bishop(Color.Black, new Location(2,7)) },
@@ -21,17 +31,7 @@ public class Board{
             { new Knight(Color.White, new Location(6,0)), null, null, null, null, null, null, new Knight(Color.Black, new Location(6,7)) },
             { new Rook(Color.White, new Location(7,0)), null, null, null, null, null, null, new Rook(Color.Black, new Location(7,7)) }
         };
-        /*      old board in case i break everything
-        board = new Piece[][]{          //board needs to be build sideways, to maintain col, row notation
-                { new Rook(Color.White, new Location(0,0)), new Knight(Color.White, new Location(0,1)), new Bishop(Color.White, new Location(0,2)), new Queen(Color.White, new Location(0,3)), new King(Color.White, new Location(0,4)), new Bishop(Color.White, new Location(0,5)), new Knight(Color.White, new Location(0,6)), new Rook(Color.White, new Location(0,7)) },
-                { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
-                { null, null, null, null, null, null, null, null },
-                { new Rook(Color.Black, new Location(7,0)), new Knight(Color.Black, new Location(7,1)), new Bishop(Color.Black, new Location(7,2)), new Queen(Color.Black, new Location(7,3)), new King(Color.Black, new Location(7,4)), new Bishop(Color.Black, new Location(7,5)), new Knight(Color.Black, new Location(7,6)), new Rook(Color.Black, new Location(7,7)) }
-        };    */
+
         for(int i = 0; i < 8; i++){
             board[i][1] = new Pawn(Color.White, new Location(i,1));
         }
@@ -40,6 +40,19 @@ public class Board{
         }
     }
 
+    /**
+     * returns the captured pieces array for editing
+     */
+    public ArrayList<Piece> getCapturedPieces() {
+        return capturedPieces;
+    }
+
+    /**
+     * returns the piece at a given board location. Ensures no out of bounds error.
+     * @param col   the desired column
+     * @param row   the desired row
+     * @return      the piece at that location
+     */
     public Piece pieceAt(int col, int row) {
         Piece returnPiece = null;
         if (col >= 0 && row >= 0 && col <= 7 && row <= 7) {
@@ -48,6 +61,11 @@ public class Board{
         return returnPiece;
     }
 
+    /**
+     * returns the piece at a given board location. Ensures no out of bounds error.
+     * @param location   the desired location
+     * @return           the piece at that location
+     */
     public Piece pieceAt(Location location) {
         Piece returnPiece = null;
         if (location.colIndex() >= 0 && location.rowIndex() >= 0 && location.colIndex() <= 7 && location.rowIndex() <= 7) {
@@ -56,6 +74,10 @@ public class Board{
         return returnPiece;
     }
 
+    /**
+     * View a visual representation of all the pieces on the chess bord
+     * @return  returns all spots on the chess board separated by spaces, includes the key on the edges (A-H, 1-8)
+     */
     @Override
     public String toString(){
         String retStr = "  A  B  C  D  E  F  G  H\n";
@@ -73,7 +95,12 @@ public class Board{
         }
         return retStr;
     }
-    //
+
+    /**
+     * moves a desired piece based on what move is provided. Special cases for castling TODO and pawn promotion
+     * @param move      the desired move the player would like to make
+     * @param player    the player making the move
+     */
     public void movePiece(Move move, Player player){
         if(move.castleLeft){
             int row = (player.getColor() == Color.White ? 0 : 7);
@@ -102,7 +129,20 @@ public class Board{
         Location from = move.getFrom();
         Location to = move.getTo();
         //otherwise, simply move piece
+        capturePiece(to,player);
         board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
         board[from.colIndex()][from.rowIndex()] = null;
+    }
+
+    /**
+     * helper function to check if there is a piece at a location and update the related piece lists
+     * @param to        the location of the piece potentially being captured
+     * @param player    the player capturing the piece
+     */
+    public void capturePiece(Location to, Player player) {
+        if (board[to.colIndex()][to.rowIndex()] != null) {
+            capturedPieces.add(board[to.colIndex()][to.rowIndex()]);
+            //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
+        }
     }
 }
