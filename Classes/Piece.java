@@ -51,4 +51,24 @@ public abstract class Piece {
         return moves;
     }
 
+    public boolean canMove(Location currLocation, int colDir, int rowDir, Board board){
+
+        if(currLocation.colIndex() + colDir > 7 || currLocation.colIndex() + colDir < 0 ||
+                currLocation.rowIndex() + rowDir > 7 || currLocation.rowIndex() + rowDir < 0){
+            return false;
+        }
+
+        Location checkLocation = new Location(currLocation.rowIndex() + rowDir, currLocation.colIndex() + colDir);
+        if(board.pieceAt(checkLocation) != null){
+            if(board.pieceAt(checkLocation).getColor().equals(this.getColor())) { // if same color
+                return false; // invalid move
+            }
+            else{ // if other color
+                return true; // valid move (take piece)
+            }
+        }
+        else {
+            return true;
+        }
+    }
 }

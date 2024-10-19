@@ -17,6 +17,21 @@ public class Queen extends Piece {
     @Override
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
+
+        // horizontal/vertical moves
+        moves.addAll(march(1, 0, board, this.location, this.getColor()));
+        moves.addAll(march(-1, 0, board, this.location, this.getColor()));
+        moves.addAll(march(0, -1, board, this.location, this.getColor()));
+        moves.addAll(march(0, 1, board, this.location, this.getColor()));
+        // diagonal moves
+        moves.addAll(this.march(1, -1, board, this.location, this.color));
+        moves.addAll(this.march(1, 1, board, this.location, this.color));
+        moves.addAll(this.march(-1, -1, board, this.location, this.color));
+        moves.addAll(this.march(-1, 1, board, this.location, this.color));
+
+
+
+
         return moves;
     }
 

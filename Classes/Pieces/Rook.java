@@ -19,6 +19,16 @@ public class Rook extends Piece {
     @Override
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
+
+        // valid moves going "ahead"
+        moves.addAll(march(1, 0, board, this.location, this.getColor()));
+        // valid moves going "back"
+        moves.addAll(march(-1, 0, board, this.location, this.getColor()));
+        // valid moves going left
+        moves.addAll(march(0, -1, board, this.location, this.getColor()));
+        // valid moves going right
+        moves.addAll(march(0, 1, board, this.location, this.getColor()));
+
         return moves;
     }
 
