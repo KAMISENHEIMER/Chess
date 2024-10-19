@@ -41,11 +41,19 @@ public class Board{
     }
 
     public Piece pieceAt(int col, int row) {
-        return board[col][row];
+        Piece returnPiece = null;
+        if (col >= 0 && row >= 0 && col <= 7 && row <= 7) {
+            returnPiece = board[col][row];
+        }
+        return returnPiece;
     }
 
     public Piece pieceAt(Location location) {
-        return board[location.colIndex()][location.rowIndex()];
+        Piece returnPiece = null;
+        if (location.colIndex() >= 0 && location.rowIndex() >= 0 && location.colIndex() <= 7 && location.rowIndex() <= 7) {
+            returnPiece = board[location.colIndex()][location.rowIndex()];
+        }
+        return returnPiece;
     }
 
     @Override
