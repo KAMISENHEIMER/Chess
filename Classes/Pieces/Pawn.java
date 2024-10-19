@@ -23,7 +23,7 @@ public class Pawn extends Piece {
         int colorMultiplier = this.getColor().equals(Color.White) ? 1 : -1;
 
         // Can we double jump?
-        if (!this.hasMoved){
+        if (!this.hasMoved && board.pieceAt(new Location(this.location.colIndex(), this.location.rowIndex() + colorMultiplier)) == null){
             Location jumpLocation = new Location(this.location.colIndex(), this.location.rowIndex() + (2 * colorMultiplier));
             if(board.pieceAt(jumpLocation) == null){
                 moves.add(new Move(this.location, jumpLocation));
