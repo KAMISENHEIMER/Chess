@@ -8,14 +8,29 @@ import Utility.Enums;
 
 import java.util.ArrayList;
 
+/**
+ * Class for Rook piece
+ */
 public class Rook extends Piece {
 
-    boolean hasMoved;
+    boolean hasMoved; // For castling
 
+    /**
+     * Constructs a new Queen piece
+     *
+     * @param color Color of piece
+     * @param location Location piece spawns in
+     */
     public Rook(Enums.Color color, Location location) {
         super(color, location);
     }
 
+    /**
+     * Gets a list of all possible moves
+     *
+     * @param board Reference to game board
+     * @return moves ArrayList of all valid moves for piece
+     */
     @Override
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
@@ -32,6 +47,11 @@ public class Rook extends Piece {
         return moves;
     }
 
+    /**
+     * Represents piece as string, for displaying on board
+     *
+     * @return Rook piece represented as string. Ex) wR for white pawn
+     */
     @Override
     public String toString() {
         return (color.equals(Enums.Color.White)?"w":"b") + "R";

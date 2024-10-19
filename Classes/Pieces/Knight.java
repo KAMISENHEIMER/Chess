@@ -8,12 +8,27 @@ import Utility.Enums;
 
 import java.util.ArrayList;
 
+/**
+ * Class for Bishop piece
+ */
 public class Knight extends Piece {
 
+    /**
+     * Constructs a new Knight piece
+     *
+     * @param color Color of piece
+     * @param location Location piece spawns in
+     */
     public Knight(Enums.Color color, Location location) {
         super(color, location);
     }
 
+    /**
+     * Gets a list of all possible moves
+     *
+     * @param board Reference to game board
+     * @return moves ArrayList of all valid moves for piece
+     */
     @Override
     public ArrayList<Move> getMoves(Board board) {
         ArrayList<Move> moves = new ArrayList<Move>();
@@ -63,6 +78,11 @@ public class Knight extends Piece {
         return moves;
     }
 
+    /**
+     * Represents piece as string, for displaying on board
+     *
+     * @return Knight piece represented as string. Ex) wN for white knight
+     */
     @Override
     public String toString() {
         return (color.equals(Enums.Color.White)?"w":"b") + "N";
