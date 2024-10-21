@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Pawn extends Piece {
 
-    boolean hasMoved;
+    private boolean hasMoved;
 
     /**
      * Constructs a new Pawn piece
@@ -23,6 +23,7 @@ public class Pawn extends Piece {
      */
     public Pawn(Color color, Location location) {
         super(color, location);
+        hasMoved = false;
     }
 
     /**
@@ -83,6 +84,18 @@ public class Pawn extends Piece {
         }
 
         return moves;
+    }
+
+    /**
+     * Sets pawn's location, and declares it has moved
+     *
+     * @param location  New desired location for pawn
+     */
+    @Override
+    public void move(Location location) {
+        this.location = location;
+        hasMoved = true;
+        System.out.println("PAWN MOVED");
     }
 
     /**
