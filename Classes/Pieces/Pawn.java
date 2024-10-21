@@ -72,15 +72,18 @@ public class Pawn extends Piece {
 
         // Check if enemy at diagonals:
         // Ahead and to the left
-        Location checkLocation = new Location(this.location.colIndex() - colorMultiplier, this.location.rowIndex() + colorMultiplier);
-        if((board.pieceAt(checkLocation) != null) && (board.pieceAt(checkLocation).getColor() != this.getColor())) {
-            moves.add(new Move(this.location, checkLocation));
+        if (this.location.colIndex() - colorMultiplier >= 0 && this.location.colIndex() - colorMultiplier <= 7) {       //makes sure within board bounds
+            Location checkLocation = new Location(this.location.colIndex() - colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the left
+            if ((board.pieceAt(checkLocation) != null) && (board.pieceAt(checkLocation).getColor() != this.getColor())) {       //if there is an enemy, and its not the same color
+                moves.add(new Move(this.location, checkLocation));
+            }
         }
-
         // Ahead and to the right
-        checkLocation = new Location(this.location.colIndex() + colorMultiplier, this.location.rowIndex() + colorMultiplier);
-        if(board.pieceAt(checkLocation) != null && board.pieceAt(checkLocation).getColor() != this.getColor()) {
-            moves.add(new Move(this.location, checkLocation));
+        if (this.location.colIndex() + colorMultiplier >= 0 && this.location.colIndex() + colorMultiplier <= 7) {        //makes sure within board bounds
+            Location checkLocation = new Location(this.location.colIndex() + colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the right
+            if (board.pieceAt(checkLocation) != null && board.pieceAt(checkLocation).getColor() != this.getColor()) {           //if there is an enemy, and its not the same color
+                moves.add(new Move(this.location, checkLocation));
+            }
         }
 
         return moves;
