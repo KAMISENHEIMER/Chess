@@ -77,6 +77,9 @@ public class Game{
         }
         //perform the move
         board.movePiece(move, currentPlayer);
+
+        //switch color
+        currentPlayer = currentPlayer.getColor()==Color.White?black:white;
     }
     //methods for checking move
 
@@ -102,11 +105,15 @@ public class Game{
      * @return
      */
     public boolean checkLegalMove(Move move){
-        //checks if there is a piece to move. Loops otherwise
+        //checks if there is a piece to move
         if(board.pieceAt(move.getFrom())==null){
             return false;
         }
-
+        //ensures the piece is the same color as the current player
+        if(board.pieceAt(move.getFrom()).getColor()!=currentPlayer.getColor()){
+            return false;
+        }
+        //returns whether that move is in the moves list of that piece
         return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
     }
 
