@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class Player{
     private ArrayList<Piece> pieces;
     private Color color;
+    private Piece king;
 
     /**
      * Player constructor
@@ -49,6 +50,24 @@ public class Player{
             moves.addAll(piece.getMoves(board));
         }
         return moves;
+    }
+
+    /**
+     * used in setting this players pointer to their king, useful for retrieving where the king is
+     *
+     * @param king      the king piece to be added to this player
+     */
+    public void setKing(Piece king) {
+        this.king = king;
+    }
+
+    /**
+     * retrieves where ever this players king is at on the board
+     *
+     * @return      this players king location
+     */
+    public Piece getKing() {
+        return king;   //this shouldn't ever cause any issues because each player should always have a king
     }
 
     // this probably shouldn't be in player, it doesn't really have anything to do with the player

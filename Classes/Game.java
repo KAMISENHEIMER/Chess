@@ -17,7 +17,7 @@ public class Game{
     private Player currentPlayer;
     private boolean gameRunning;
     private Board board;
-    public Player white;
+    private Player white;
     private Player black;
     //constructor
 
@@ -37,11 +37,13 @@ public class Game{
                 white.getPieces().add(board.pieceAt(j,i));
             }
         }
+        white.setKing(board.pieceAt(4,0));
         for (int i = 6; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 black.getPieces().add(board.pieceAt(j,i));
             }
         }
+        black.setKing(board.pieceAt(4,7));
 
     }
     //starting method
@@ -105,6 +107,10 @@ public class Game{
      * @return
      */
     public boolean checkLegalMove(Move move){
+        //checks for castling
+        if ((move.castleLeft || move.castleRight)) {
+            return currentPlayer.getKing().getMoves(board).contains(move);
+        }
         //checks if there is a piece to move
         if(board.pieceAt(move.getFrom())==null){
             return false;
