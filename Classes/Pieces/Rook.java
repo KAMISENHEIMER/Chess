@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public class Rook extends Piece {
 
-    boolean hasMoved; // For castling
+    private boolean hasMoved; // For castling
 
     /**
      * Constructs a new Queen piece
@@ -23,6 +23,7 @@ public class Rook extends Piece {
      */
     public Rook(Enums.Color color, Location location) {
         super(color, location);
+        hasMoved = false;
     }
 
     /**
@@ -45,6 +46,21 @@ public class Rook extends Piece {
         moves.addAll(march(0, 1, board, this.location, this.getColor()));
 
         return moves;
+    }
+
+    /**
+     * Sets rook's location, and declares it has moved
+     *
+     * @param location  New desired location for rook
+     */
+    @Override
+    public void move(Location location) {
+        this.location = location;
+        hasMoved = true;
+    }
+
+    public boolean getHasMoved() {
+        return hasMoved;
     }
 
     /**

@@ -98,7 +98,6 @@ public class Pawn extends Piece {
     public void move(Location location) {
         this.location = location;
         hasMoved = true;
-        System.out.println("PAWN MOVED");
     }
 
     /**
