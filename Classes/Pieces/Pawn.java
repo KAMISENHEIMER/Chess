@@ -38,6 +38,9 @@ public class Pawn extends Piece {
         // 1 for white, -1 for black
         int colorMultiplier = this.getColor().equals(Color.White) ? 1 : -1;
 
+        // checks if its next jump would put it in the back rank of the board (for promotions)
+        boolean backRank = this.location.rowIndex() + colorMultiplier==7 || this.location.rowIndex() + colorMultiplier==0;
+
         // Double jumping
         if (!this.hasMoved && board.pieceAt(new Location(this.location.colIndex(), this.location.rowIndex() + colorMultiplier)) == null){
             Location jumpLocation = new Location(this.location.colIndex(), this.location.rowIndex() + (2 * colorMultiplier));
@@ -67,7 +70,12 @@ public class Pawn extends Piece {
         // Check spot in front of it. If there's a piece then we can't move.
         Location ahead = new Location(this.location.colIndex(), this.location.rowIndex() + colorMultiplier);
         if(board.pieceAt(ahead) == null) {
-            moves.add(new Move(this.location, ahead)); // path clear
+            //potential pawn promotion
+            if (backRank) {
+                addPromotions(moves, ahead);
+            } else {
+                moves.add(new Move(this.location, ahead)); // path clear, move normally forward
+            }
         }
 
         // Check if enemy at diagonals:
@@ -75,18 +83,39 @@ public class Pawn extends Piece {
         if (this.location.colIndex() - colorMultiplier >= 0 && this.location.colIndex() - colorMultiplier <= 7) {       //makes sure within board bounds
             Location checkLocation = new Location(this.location.colIndex() - colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the left
             if ((board.pieceAt(checkLocation) != null) && (board.pieceAt(checkLocation).getColor() != this.getColor())) {       //if there is an enemy, and its not the same color
-                moves.add(new Move(this.location, checkLocation));
+                //potential pawn promotion
+                if (backRank) {
+                    addPromotions(moves, checkLocation);
+                } else {
+                    moves.add(new Move(this.location, checkLocation));  //take diagonally normally
+                }
             }
         }
         // Ahead and to the right
         if (this.location.colIndex() + colorMultiplier >= 0 && this.location.colIndex() + colorMultiplier <= 7) {        //makes sure within board bounds
             Location checkLocation = new Location(this.location.colIndex() + colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the right
             if (board.pieceAt(checkLocation) != null && board.pieceAt(checkLocation).getColor() != this.getColor()) {           //if there is an enemy, and its not the same color
-                moves.add(new Move(this.location, checkLocation));
+                if (backRank) {
+                    addPromotions(moves, checkLocation);
+                } else {
+                    moves.add(new Move(this.location, checkLocation));  //take diagonally normally
+                }
             }
         }
 
         return moves;
+    }
+
+    /**
+     * adds all pawn promotion variations of a single move
+     * @param moves        the moves array to add moves into
+     * @param location     the to location that the pawn (whatever it promotes into) will end up at
+     */
+    public void addPromotions(ArrayList<Move> moves, Location location) {
+        moves.add(new Move(this.location, location, 'Q'));     //add all possible promotions
+        moves.add(new Move(this.location, location, 'R'));
+        moves.add(new Move(this.location, location, 'B'));
+        moves.add(new Move(this.location, location, 'N'));
     }
 
     /**

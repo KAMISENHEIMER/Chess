@@ -113,28 +113,52 @@ public class Board{
             //delete rook and king from old squares
             board[0][row] = null;
             board[4][row] = null;
-            //prevent error from continuing method
-            return;
-        }
-        if(move.castleRight){
+        } else if(move.castleRight){
             int row = (player.getColor() == Color.White ? 0 : 7);
             //rook swaps to spot
             board[5][row] = board[7][row];
+            board[5][row].move(new Location(5,row));
             //king swaps to spot
             board[6][row] = board[4][row];
+            board[6][row].move(new Location(6,row));
             //delete rook and king from old squares
             board[7][row] = null;
             board[4][row] = null;
-            //prevent error from continuing method
-            return;
+        } else if (move.promoteTo != 0) {       //pawn promotion case
+            Location from = move.getFrom();
+            Location to = move.getTo();
+            capturePiece(to, player);
+            Piece pawn = board[from.colIndex()][from.rowIndex()];
+            Piece promotedPiece;
+            switch (move.promoteTo) {
+                case 'Q':
+                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+                    break;
+                case 'N':
+                    promotedPiece = new Knight(pawn.getColor(), pawn.location);
+                    break;
+                case 'R':
+                    promotedPiece = new Rook(pawn.getColor(), pawn.location);
+                    break;
+                case 'B':
+                    promotedPiece = new Bishop(pawn.getColor(), pawn.location);
+                    break;
+                default:
+                    //shouldn't ever happen, something went wrong, default to queen
+                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+            }
+            board[to.colIndex()][to.rowIndex()] = promotedPiece;
+            board[to.colIndex()][to.rowIndex()].move(to);
+            board[from.colIndex()][from.rowIndex()] = null;
+        } else {
+            Location from = move.getFrom();
+            Location to = move.getTo();
+            //otherwise, simply move piece
+            capturePiece(to, player);
+            board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
+            board[to.colIndex()][to.rowIndex()].move(to);
+            board[from.colIndex()][from.rowIndex()] = null;
         }
-        Location from = move.getFrom();
-        Location to = move.getTo();
-        //otherwise, simply move piece
-        capturePiece(to,player);
-        board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
-        board[to.colIndex()][to.rowIndex()].move(to);
-        board[from.colIndex()][from.rowIndex()] = null;
     }
 
     /**

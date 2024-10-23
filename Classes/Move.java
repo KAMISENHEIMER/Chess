@@ -8,7 +8,8 @@ public class Move {
     private Location from;
     private Location to;
 
-    private char promoteTo = 0;     //only used for pawn promotion, char represents piece to upgrade to
+    //TODO these should really be private and have get methods
+    public char promoteTo = 0;     //only used for pawn promotion, char represents piece to upgrade to
     public boolean castleLeft;    //(long side)  only used for castling
     public boolean castleRight;   //(short side) only used for castling
 
