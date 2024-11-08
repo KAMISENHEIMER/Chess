@@ -172,4 +172,12 @@ public class Board{
             //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
         }
     }
+
+    /**
+     * returns the board, for altering it directly
+     * @return      the board object which contains all pieces
+     */
+    public Piece[][] getBoard() {
+        return board;
+    }
 }

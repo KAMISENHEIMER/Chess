@@ -123,4 +123,8 @@ public class Game{
         return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
 }
