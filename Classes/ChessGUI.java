@@ -41,25 +41,25 @@ public class ChessGUI {
             case "wR":
                 return LoadImage("Assets/whiteRook.png");
             case "wN":
-                break;
+                return LoadImage("Assets/whiteKnight.png");
             case "wB":
-                break;
+                return LoadImage("Assets/whiteBishop.png");
             case "wQ":
-                break;
+                return LoadImage("Assets/whiteQueen.png");
             case "wK":
-                break;
+                return LoadImage("Assets/whiteKing.png");
             case "bP":
                 return LoadImage("Assets/blackPawn.png");
             case "bR":
                 return LoadImage("Assets/blackRook.png");
             case "bN":
-                break;
+                return LoadImage("Assets/blackKnight.png");
             case "bB":
-                break;
+                return LoadImage("Assets/blackBishop.png");
             case "bQ":
-                break;
+                return LoadImage("Assets/blackQueen.png");
             case "bK":
-                break;
+                return LoadImage("Assets/blackKing.png");
         }
         return LoadImage("Assets/smiley.png");
     }
