@@ -127,4 +127,12 @@ public class Game{
         return board;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Player getPlayer(boolean getWhite) {
+        return getWhite?white:black;
+    }
+
 }

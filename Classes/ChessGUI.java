@@ -12,32 +12,16 @@ import java.io.IOException;
 
 public class ChessGUI {
 
-    // unicode chess pieces
-    String bK = "\u2654"; //♔
-    String bQ = "\u2655"; //♕
-    String bR = "\u2656"; //♖
-    String bB = "\u2657"; //♗
-    String bN = "\u2658"; //♘
-    String bP = "\u2659"; //♙
-    String wK = "\u265A"; //♚
-    String wQ = "\u265B"; //♛
-    String wR = "\u265C"; //♜
-    String wB = "\u265D"; //♝
-    String wN = "\u265E"; //♞
-    String wP = "\u265F"; //♟
+    //board colors
+    //Color lightColor = new Color(240, 217, 181);
+    //Color darkColor = new Color(181, 136, 99);
+    Color lightColor = new Color(238,238,210);
+    Color darkColor = new Color(118,150,86);
+    //TODO include other custom color schemes selectable in the color scheme
 
-    JLabel whitePawn = LoadImage("Assets/whitePawn.png");
-    JLabel whiteRook = LoadImage("Assets/whiteRook.png");
-    JLabel whiteBishop;
-    JLabel whiteKnight;
-    JLabel whiteQueen;
-    JLabel whiteKing;
-    JLabel blackPawn = LoadImage("Assets/blackPawn.png");
-    JLabel blackRook = LoadImage("Assets/blackRook.png");;
-    JLabel blackBishop;
-    JLabel blackKnight;
-    JLabel blackQueen;
-    JLabel blackKing;
+    //variable to hold whatever piece the player has clicked
+    Piece selectedPiece;
+    JPanel selectedPanel;
 
     public JLabel LoadImage(String fileName){
         BufferedImage pieceImage;
@@ -80,25 +64,6 @@ public class ChessGUI {
         return LoadImage("Assets/smiley.png");
     }
 
-
-    //board colors
-    //Color lightColor = new Color(240, 217, 181);
-    //Color darkColor = new Color(181, 136, 99);
-    Color lightColor = new Color(238,238,210);
-    Color darkColor = new Color(118,150,86);
-    //TODO include other custom color schemes selectable in the color scheme
-    // potentially by using a class that contains all colors and piece icons, and is implemented by the piece.
-
-
-    //variable to hold whatever piece the player has clicked
-    Piece selectedPiece;
-    JPanel selectedPanel;
-
-    //2d array to hold all Panels
-    JPanel[][] boardGrid;
-
-
-
     public ChessGUI() {
         //frame that holds window
         JFrame frame = new JFrame("Chess Board");
@@ -109,8 +74,6 @@ public class ChessGUI {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
         boardPanel.setPreferredSize(new Dimension(600, 600));
-
-        boardGrid = new JPanel[8][8];
 
         //make a chess game
         Game game = new Game();
@@ -139,11 +102,11 @@ public class ChessGUI {
                 backgroundPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        clickHandling(board, fixedI, fixedJ, backgroundPanel);
+                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game);
                     }
                 });
 
-                boardGrid[j][i] = backgroundPanel;
+                //boardGrid[j][i] = backgroundPanel;
                 boardPanel.add(backgroundPanel);
 
             }
@@ -157,7 +120,7 @@ public class ChessGUI {
         frame.setVisible(true);     //display the whole frame
     }
 
-    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel){
+    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel, Game game){
         if (selectedPiece == null) {
             //select first piece
             selectedPiece = board.pieceAt(fixedJ,fixedI);
@@ -168,7 +131,7 @@ public class ChessGUI {
             //move piece
             //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
 
-            //remove image from the current spot if there is one
+            //remove image from the new spot if there is one
             if (backgroundPanel.getComponents().length >= 1) {
                 backgroundPanel.remove(backgroundPanel.getComponents()[0]);
             }
@@ -196,7 +159,18 @@ public class ChessGUI {
             selectedPanel = null;
 
             System.out.println("PIECE MOVED");   //TESTING
+            CheckForKingCapture(game);
         }
+    }
+
+    public void CheckForKingCapture(Game game) {
+        if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().location)) {
+            System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
+        }
+        if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().location)) {
+            System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
+        }
+
     }
 
 }
