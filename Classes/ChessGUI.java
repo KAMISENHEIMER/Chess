@@ -17,6 +17,8 @@ public class ChessGUI {
     //Color darkColor = new Color(181, 136, 99);
     Color lightColor = new Color(238,238,210);
     Color darkColor = new Color(118,150,86);
+    Color lightColorHighlight = new Color(250,250,110);
+    Color darkColorHighlight = new Color(186,202,68);
     //TODO include other custom color schemes selectable in the color scheme
 
     //variable to hold whatever piece the player has clicked
@@ -126,10 +128,18 @@ public class ChessGUI {
             selectedPiece = board.pieceAt(fixedJ,fixedI);
             selectedPanel = backgroundPanel;
 
+            //highlight selected panel if there is a piece there
+            if (selectedPiece != null) {
+                backgroundPanel.setBackground(backgroundPanel.getBackground() == lightColor ? lightColorHighlight : darkColorHighlight);
+            }
+
             System.out.println("PIECE SELECTED");   //TESTING
-        } else {
+        } else if (selectedPiece != board.pieceAt(fixedJ,fixedI)) {
             //move piece
             //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
+
+            //unhighlight selected panel
+            selectedPanel.setBackground(selectedPanel.getBackground()==lightColorHighlight?lightColor:darkColor);
 
             //remove image from the new spot if there is one
             if (backgroundPanel.getComponents().length >= 1) {
