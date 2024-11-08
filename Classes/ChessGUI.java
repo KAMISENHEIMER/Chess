@@ -80,42 +80,7 @@ public class ChessGUI {
                 backgroundPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        if (selectedPiece == null) {
-                            //select first piece
-                            selectedPiece = board.pieceAt(fixedJ,fixedI);
-                            selectedPanel = backgroundPanel;
-
-                            System.out.println("PIECE SELECTED");   //TESTING
-                        } else {
-                            //move piece
-                            //add text to the new spot
-                            JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
-                            System.out.println(selectedPiece);  //TESTING
-                            text.setVisible(true);
-                            backgroundPanel.add(text);
-
-                            //remove text from the previous spot
-                            System.out.println(selectedPanel.getComponents()[0]);   //TESTING
-                            selectedPanel.remove(selectedPanel.getComponents()[0]);
-
-                            //redraw the labels to accurately reflect these changes
-                            selectedPanel.revalidate();
-                            selectedPanel.repaint();
-                            backgroundPanel.revalidate();
-                            backgroundPanel.repaint();
-
-                            //move the chess piece  TODO replace this with actual game logic
-                            board.getBoard()[selectedPiece.location.colIndex()][selectedPiece.location.rowIndex()] = null;
-                            board.getBoard()[fixedJ][fixedI] = selectedPiece;
-                            selectedPiece.move(new Location(fixedJ,fixedI));
-
-                            //empty both variables for future use;
-                            selectedPiece = null;
-                            selectedPanel = null;
-
-                            System.out.println("PIECE MOVED");   //TESTING
-
-                        }
+                        clickHandling(board, fixedI, fixedJ, backgroundPanel);
                     }
                 });
 
@@ -142,6 +107,44 @@ public class ChessGUI {
             }
         }
         return new int[]{-1, -1}; // Not found
+    }
+
+    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel){
+        if (selectedPiece == null) {
+            //select first piece
+            selectedPiece = board.pieceAt(fixedJ,fixedI);
+            selectedPanel = backgroundPanel;
+
+            System.out.println("PIECE SELECTED");   //TESTING
+        } else {
+            //move piece
+            //add text to the new spot
+            JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
+            System.out.println(selectedPiece);  //TESTING
+            text.setVisible(true);
+            backgroundPanel.add(text);
+
+            //remove text from the previous spot
+            System.out.println(selectedPanel.getComponents()[0]);   //TESTING
+            selectedPanel.remove(selectedPanel.getComponents()[0]);
+
+            //redraw the labels to accurately reflect these changes
+            selectedPanel.revalidate();
+            selectedPanel.repaint();
+            backgroundPanel.revalidate();
+            backgroundPanel.repaint();
+
+            //move the chess piece  TODO replace this with actual game logic
+            board.getBoard()[selectedPiece.location.colIndex()][selectedPiece.location.rowIndex()] = null;
+            board.getBoard()[fixedJ][fixedI] = selectedPiece;
+            selectedPiece.move(new Location(fixedJ,fixedI));
+
+            //empty both variables for future use;
+            selectedPiece = null;
+            selectedPanel = null;
+
+            System.out.println("PIECE MOVED");   //TESTING
+        }
     }
 
 }

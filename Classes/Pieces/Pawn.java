@@ -82,7 +82,7 @@ public class Pawn extends Piece {
         // Ahead and to the left
         if (this.location.colIndex() - colorMultiplier >= 0 && this.location.colIndex() - colorMultiplier <= 7) {       //makes sure within board bounds
             Location checkLocation = new Location(this.location.colIndex() - colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the left
-            if ((board.pieceAt(checkLocation) != null) && (board.pieceAt(checkLocation).getColor() != this.getColor())) {       //if there is an enemy, and its not the same color
+            if ((board.pieceAt(checkLocation) != null) && (board.pieceAt(checkLocation).getColor() != this.getColor())) {       //if there is an enemy, and it's not the same color
                 //potential pawn promotion
                 if (backRank) {
                     addPromotions(moves, checkLocation);
@@ -94,7 +94,7 @@ public class Pawn extends Piece {
         // Ahead and to the right
         if (this.location.colIndex() + colorMultiplier >= 0 && this.location.colIndex() + colorMultiplier <= 7) {        //makes sure within board bounds
             Location checkLocation = new Location(this.location.colIndex() + colorMultiplier, this.location.rowIndex() + colorMultiplier);      //makes location forward and to the right
-            if (board.pieceAt(checkLocation) != null && board.pieceAt(checkLocation).getColor() != this.getColor()) {           //if there is an enemy, and its not the same color
+            if (board.pieceAt(checkLocation) != null && board.pieceAt(checkLocation).getColor() != this.getColor()) {           //if there is an enemy, and it's not the same color
                 if (backRank) {
                     addPromotions(moves, checkLocation);
                 } else {
