@@ -130,8 +130,6 @@ public class ChessGUI {
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
                     JLabel picLabel = PieceToImage(piece.toString());
-                    //JLabel text = new JLabel(piece.toString());
-                    //backgroundPanel.add(text);
                     backgroundPanel.add(picLabel);
                 }
 
@@ -159,17 +157,6 @@ public class ChessGUI {
         frame.setVisible(true);     //display the whole frame
     }
 
-    private int[] findPanelPosition(JPanel panel) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (boardGrid[i][j] == panel) {
-                    return new int[]{i, j};
-                }
-            }
-        }
-        return new int[]{-1, -1}; // Not found
-    }
-
     public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel){
         if (selectedPiece == null) {
             //select first piece
@@ -179,14 +166,18 @@ public class ChessGUI {
             System.out.println("PIECE SELECTED");   //TESTING
         } else {
             //move piece
-            //add text to the new spot
-            JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
-            System.out.println(selectedPiece);  //TESTING
-            text.setVisible(true);
-            backgroundPanel.add(text);
+            //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
 
-            //remove text from the previous spot
-            System.out.println(selectedPanel.getComponents()[0]);   //TESTING
+            //remove image from the current spot if there is one
+            if (backgroundPanel.getComponents().length >= 1) {
+                backgroundPanel.remove(backgroundPanel.getComponents()[0]);
+            }
+
+            //add image to new spot
+            JLabel picLabel = PieceToImage(selectedPiece.toString());
+            backgroundPanel.add(picLabel);
+
+            //remove image from the previous spot
             selectedPanel.remove(selectedPanel.getComponents()[0]);
 
             //redraw the labels to accurately reflect these changes
