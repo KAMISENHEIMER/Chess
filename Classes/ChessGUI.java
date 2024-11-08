@@ -1,10 +1,14 @@
 package Classes;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ChessGUI {
 
@@ -21,6 +25,61 @@ public class ChessGUI {
     String wB = "\u265D"; //♝
     String wN = "\u265E"; //♞
     String wP = "\u265F"; //♟
+
+    JLabel whitePawn = LoadImage("Assets/whitePawn.png");
+    JLabel whiteRook = LoadImage("Assets/whiteRook.png");
+    JLabel whiteBishop;
+    JLabel whiteKnight;
+    JLabel whiteQueen;
+    JLabel whiteKing;
+    JLabel blackPawn = LoadImage("Assets/blackPawn.png");
+    JLabel blackRook = LoadImage("Assets/blackRook.png");;
+    JLabel blackBishop;
+    JLabel blackKnight;
+    JLabel blackQueen;
+    JLabel blackKing;
+
+    public JLabel LoadImage(String fileName){
+        BufferedImage pieceImage;
+        try {
+            pieceImage = ImageIO.read(new File(fileName));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Image pieceImageScaled = pieceImage.getScaledInstance(64,64,Image.SCALE_DEFAULT);
+        return new JLabel(new ImageIcon(pieceImageScaled));
+    }
+
+    public JLabel PieceToImage(String pieceStr){
+        switch (pieceStr){
+            case "wP":
+                return LoadImage("Assets/whitePawn.png");
+            case "wR":
+                return LoadImage("Assets/whiteRook.png");
+            case "wN":
+                break;
+            case "wB":
+                break;
+            case "wQ":
+                break;
+            case "wK":
+                break;
+            case "bP":
+                return LoadImage("Assets/blackPawn.png");
+            case "bR":
+                return LoadImage("Assets/blackRook.png");
+            case "bN":
+                break;
+            case "bB":
+                break;
+            case "bQ":
+                break;
+            case "bK":
+                break;
+        }
+        return LoadImage("Assets/smiley.png");
+    }
+
 
     //board colors
     //Color lightColor = new Color(240, 217, 181);
@@ -49,7 +108,7 @@ public class ChessGUI {
         //panel that holds board
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
-        boardPanel.setPreferredSize(new Dimension(400, 400));
+        boardPanel.setPreferredSize(new Dimension(600, 600));
 
         boardGrid = new JPanel[8][8];
 
@@ -70,8 +129,10 @@ public class ChessGUI {
                 //if there is a piece, assign text to that panel TODO make this an image
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
-                    JLabel text = new JLabel(piece.toString());
-                    backgroundPanel.add(text);
+                    JLabel picLabel = PieceToImage(piece.toString());
+                    //JLabel text = new JLabel(piece.toString());
+                    //backgroundPanel.add(text);
+                    backgroundPanel.add(picLabel);
                 }
 
                 int fixedI = i;
