@@ -102,7 +102,7 @@ public class ChessGUI {
                 backgroundPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game);
+                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game, frame);
                     }
                 });
 
@@ -120,7 +120,7 @@ public class ChessGUI {
         frame.setVisible(true);     //display the whole frame
     }
 
-    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel, Game game){
+    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel, Game game, JFrame frame){
         if (selectedPiece == null) {
             //select first piece
             selectedPiece = board.pieceAt(fixedJ,fixedI);
@@ -159,16 +159,19 @@ public class ChessGUI {
             selectedPanel = null;
 
             System.out.println("PIECE MOVED");   //TESTING
-            CheckForKingCapture(game);
+            CheckForKingCapture(game, frame);
         }
     }
 
-    public void CheckForKingCapture(Game game) {
+    public void CheckForKingCapture(Game game, JFrame frame) {
         if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().location)) {
             System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
+            JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
         }
         if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().location)) {
             System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
+            JOptionPane.showMessageDialog(frame, "Game over, White wins!");
+            System.exit(0);
         }
 
     }
