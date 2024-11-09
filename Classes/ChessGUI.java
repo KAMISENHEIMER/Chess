@@ -1,4 +1,8 @@
 package Classes;
+import Classes.Pieces.King;
+import Classes.Pieces.Pawn;
+import Utility.Enums;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -132,6 +136,7 @@ public class ChessGUI {
         boolean legalMove = false;
         if (selectedPiece != null) {
             move = new Move(selectedPiece.location, new Location(fixedJ, fixedI));
+            move = correctMove(game, move);     //fixes move if it is a pawn promotion or castle
             legalMove = game.checkLegalMove(move);
         }
         boolean notSamePiece = (selectedPiece != board.pieceAt(fixedJ, fixedI));
@@ -150,6 +155,9 @@ public class ChessGUI {
         } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
             //all of this moves a piece
 
+            //move the chess piece (and switch the current player)
+            game.playGUI(move);
+
             //unhighlight selected panel
             selectedPanel.setBackground(selectedPanel.getBackground()==lightColorHighlight?lightColor:darkColor);
 
@@ -162,7 +170,7 @@ public class ChessGUI {
             }
 
             //add image to new spot
-            JLabel picLabel = PieceToImage(selectedPiece.toString());
+            JLabel picLabel = PieceToImage(board.pieceAt(fixedJ,fixedI).toString());   //have to get the piece at the board location because of pawns upgrading
             picLabel.setBounds(0,0,75,75);
             backgroundPanel.add(picLabel);
 
@@ -175,8 +183,32 @@ public class ChessGUI {
             backgroundPanel.revalidate();
             backgroundPanel.repaint();
 
-            //move the chess piece  TODO replace this with actual game logic
-            game.playGUI(move);
+            System.out.println(move.castleLeft);    //TESTING
+
+            //repaint the rook's squares if the move was a castle
+            int row = (game.getCurrentPlayer().getColor() == Enums.Color.White ? 7 : 0);
+            if (move.castleLeft) {
+                JLabel rookLabel = PieceToImage(board.pieceAt(3,row).toString());
+                rookLabel.setBounds(0,0,75,75);
+                boardGrid[3][row].add(rookLabel);
+                boardGrid[3][row].revalidate();
+                boardGrid[3][row].repaint();    //repaint rook's current square
+
+                boardGrid[0][row].remove(boardGrid[0][row].getComponents()[0]);
+                boardGrid[0][row].revalidate();
+                boardGrid[0][row].repaint();    //repaint rook's first square
+                System.out.println("repainted: 0 "+row);
+            } else if (move.castleRight) {
+                JLabel rookLabel = PieceToImage(board.pieceAt(5,row).toString());
+                rookLabel.setBounds(0,0,75,75);
+                boardGrid[5][row].add(rookLabel);
+                boardGrid[5][row].revalidate();
+                boardGrid[5][row].repaint();    //repaint rook's current square
+
+                boardGrid[7][row].remove(boardGrid[7][row].getComponents()[0]);
+                boardGrid[7][row].revalidate();
+                boardGrid[7][row].repaint();    //repaint rook's first square
+            }
 
             //empty both variables for future use;
             selectedPiece = null;
@@ -212,10 +244,18 @@ public class ChessGUI {
         ArrayList<Move> moves = piece.getMoves(board);
         for (Move move : moves) {
             //create a circle for all your moves, solid if onto an empty square, outline if onto a piece
-
-            int j = move.getTo().colIndex();
-            int i = move.getTo().rowIndex();
-
+            int j;
+            int i;
+            if (move.castleLeft) {
+                j = 2;
+                i = (piece.color == Enums.Color.White)?0:7;
+            } else if (move.castleRight) {
+                j = 6;
+                i = (piece.color == Enums.Color.White)?0:7;;
+            } else {
+                j = move.getTo().colIndex();
+                i = move.getTo().rowIndex();
+            }
             JLabel grayCircle;
             if (board.pieceAt(j,i) == null) {
                 grayCircle = LoadImage("Assets/greyCircle.png");
@@ -231,8 +271,6 @@ public class ChessGUI {
 
             //add to an array for easy deleting afterward
             movePanels.add(boardGrid[j][i]);
-
-            //TODO big circle if piece there
         }
     }
 
@@ -245,10 +283,26 @@ public class ChessGUI {
             panel.revalidate();
             panel.repaint();
 
-            //TODO delete the second object if there is a piece there
         }
         movePanels.clear();
     }
 
+    public Move correctMove(Game game, Move move) {
+        //alter move if necessary (castle or pawn promotion)
+        if (game.getBoard().pieceAt(move.getFrom()) == game.getCurrentPlayer().getKing() && !((King)game.getCurrentPlayer().getKing()).hasMoved) {
+            if (move.getTo().colIndex() == 2) {     //leftside castle
+                move = new Move("O-O-O");
+            } else if (move.getTo().colIndex() == 6) {  //rightside castle
+                move = new Move("O-O");
+            }
+        } else if (game.getBoard().pieceAt(move.getFrom()).getClass() == Pawn.class) {
+            if (move.getTo().rowIndex() == 0 && game.getCurrentPlayer().getColor() == Enums.Color.Black) {     //black pawn promotion
+                move = new Move(move.getFrom(),move.getTo(),'Q');
+            } else if (move.getTo().rowIndex() == 7 && game.getCurrentPlayer().getColor() == Enums.Color.White) {      //white pawn promotion
+                move = new Move(move.getFrom(),move.getTo(),'Q');
+            }   //TODO bring up a menu for pawn promotions
+        }
+        return move;
+    }
 
 }
