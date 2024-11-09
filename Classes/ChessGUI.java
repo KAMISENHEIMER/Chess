@@ -45,33 +45,21 @@ public class ChessGUI {
     }
 
     public JLabel PieceToImage(String pieceStr){
-        switch (pieceStr){
-            case "wP":
-                return LoadImage("Assets/whitePawn.png");
-            case "wR":
-                return LoadImage("Assets/whiteRook.png");
-            case "wN":
-                return LoadImage("Assets/whiteKnight.png");
-            case "wB":
-                return LoadImage("Assets/whiteBishop.png");
-            case "wQ":
-                return LoadImage("Assets/whiteQueen.png");
-            case "wK":
-                return LoadImage("Assets/whiteKing.png");
-            case "bP":
-                return LoadImage("Assets/blackPawn.png");
-            case "bR":
-                return LoadImage("Assets/blackRook.png");
-            case "bN":
-                return LoadImage("Assets/blackKnight.png");
-            case "bB":
-                return LoadImage("Assets/blackBishop.png");
-            case "bQ":
-                return LoadImage("Assets/blackQueen.png");
-            case "bK":
-                return LoadImage("Assets/blackKing.png");
-        }
-        return LoadImage("Assets/smiley.png");
+        return switch (pieceStr) {
+            case "wP" -> LoadImage("Assets/whitePawn.png");
+            case "wR" -> LoadImage("Assets/whiteRook.png");
+            case "wN" -> LoadImage("Assets/whiteKnight.png");
+            case "wB" -> LoadImage("Assets/whiteBishop.png");
+            case "wQ" -> LoadImage("Assets/whiteQueen.png");
+            case "wK" -> LoadImage("Assets/whiteKing.png");
+            case "bP" -> LoadImage("Assets/blackPawn.png");
+            case "bR" -> LoadImage("Assets/blackRook.png");
+            case "bN" -> LoadImage("Assets/blackKnight.png");
+            case "bB" -> LoadImage("Assets/blackBishop.png");
+            case "bQ" -> LoadImage("Assets/blackQueen.png");
+            case "bK" -> LoadImage("Assets/blackKing.png");
+            default -> LoadImage("Assets/smiley.png");
+        };
     }
 
     public ChessGUI() {
@@ -123,13 +111,10 @@ public class ChessGUI {
                     }
                 });
 
-
                 boardGrid[j][i] = backgroundPanel;
                 boardPanel.add(backgroundPanel);
-
             }
         }
-
 
         frame.add(boardPanel);      //puts board inside window
         frame.pack();       //displays panel inside frame
@@ -139,22 +124,24 @@ public class ChessGUI {
     }
 
     public void clickHandling(Board board, int fixedI, int fixedJ, JLayeredPane backgroundPanel, Game game, JFrame frame, ArrayList<JLayeredPane> movePanels){
-        if (selectedPiece == null) {
+
+        boolean pieceExists = (board.pieceAt(fixedJ,fixedI) != null);
+        boolean pieceCorrectColor = pieceExists && (board.pieceAt(fixedJ,fixedI).getColor() == game.getCurrentPlayer().getColor());
+
+        boolean notSamePiece = (selectedPiece != board.pieceAt(fixedJ, fixedI));
+
+        if (selectedPiece == null && pieceCorrectColor) {   //select the current piece, as long as one isn't yet selected, and the player is selecting the right colored piece.
             //select first piece
             selectedPiece = board.pieceAt(fixedJ,fixedI);
             selectedPanel = backgroundPanel;
 
-            //if there is a piece there
-            if (selectedPiece != null) {
-                //highlight the piece
-                backgroundPanel.setBackground(backgroundPanel.getBackground() == lightColor ? lightColorHighlight : darkColorHighlight);
-                //display all moves the piece can make
-                DisplayAvailableMoves(selectedPiece, board, movePanels);
-            }
-
+            //highlight the piece
+            backgroundPanel.setBackground(backgroundPanel.getBackground() == lightColor ? lightColorHighlight : darkColorHighlight);
+            //display all moves the piece can make
+            DisplayAvailableMoves(selectedPiece, board, movePanels);
 
             System.out.println("PIECE SELECTED");   //TESTING
-        } else if (selectedPiece != board.pieceAt(fixedJ,fixedI)) {
+        } else if (selectedPiece != null && notSamePiece) {   //a piece is already selected, and the piece isnt itself
             //move piece
             //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
 
@@ -194,6 +181,14 @@ public class ChessGUI {
 
             System.out.println("PIECE MOVED");   //TESTING
             CheckForKingCapture(game, frame);
+        } else {    //every other click event, remove possible moves and unhighlight panel
+            if (selectedPanel != null) {
+                selectedPanel.setBackground(selectedPanel.getBackground() == lightColorHighlight ? lightColor : darkColor);
+            }
+            RemoveAvailableMoves(movePanels);
+
+            selectedPiece = null;
+            selectedPanel = null;
         }
     }
 
