@@ -113,6 +113,9 @@ public class Board{
             //delete rook and king from old squares
             board[0][row] = null;
             board[4][row] = null;
+            //update pieces' stored location
+            board[3][row].move(new Location(3,row));
+            board[2][row].move(new Location(2,row));
         } else if(move.castleRight){
             int row = (player.getColor() == Color.White ? 0 : 7);
             //rook swaps to spot
@@ -124,6 +127,9 @@ public class Board{
             //delete rook and king from old squares
             board[7][row] = null;
             board[4][row] = null;
+            //update pieces' stored location
+            board[5][row].move(new Location(5,row));
+            board[6][row].move(new Location(6,row));
         } else if (move.promoteTo != 0) {       //pawn promotion case
             Location from = move.getFrom();
             Location to = move.getTo();
