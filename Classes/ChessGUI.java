@@ -128,6 +128,12 @@ public class ChessGUI {
         boolean pieceExists = (board.pieceAt(fixedJ,fixedI) != null);
         boolean pieceCorrectColor = pieceExists && (board.pieceAt(fixedJ,fixedI).getColor() == game.getCurrentPlayer().getColor());
 
+        Move move;
+        boolean legalMove = false;
+        if (selectedPiece != null) {
+            move = new Move(selectedPiece.location, new Location(fixedJ, fixedI));
+            legalMove = game.checkLegalMove(move);
+        }
         boolean notSamePiece = (selectedPiece != board.pieceAt(fixedJ, fixedI));
 
         if (selectedPiece == null && pieceCorrectColor) {   //select the current piece, as long as one isn't yet selected, and the player is selecting the right colored piece.
@@ -141,7 +147,7 @@ public class ChessGUI {
             DisplayAvailableMoves(selectedPiece, board, movePanels);
 
             System.out.println("PIECE SELECTED");   //TESTING
-        } else if (selectedPiece != null && notSamePiece) {   //a piece is already selected, and the piece isnt itself
+        } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
             //move piece
             //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
 
