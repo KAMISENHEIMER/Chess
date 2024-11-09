@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ChessGUI {
 
@@ -23,7 +24,14 @@ public class ChessGUI {
 
     //variable to hold whatever piece the player has clicked
     Piece selectedPiece;
-    JPanel selectedPanel;
+    JLayeredPane selectedPanel;
+
+    //2d array to hold references to all panels
+    JLayeredPane[][] boardGrid;
+
+    //arrayList to hold references to all potential move panels
+    ArrayList<JLayeredPane> movePanels;
+
 
     public JLabel LoadImage(String fileName){
         BufferedImage pieceImage;
@@ -77,6 +85,10 @@ public class ChessGUI {
         boardPanel.setLayout(new GridLayout(8, 8));
         boardPanel.setPreferredSize(new Dimension(600, 600));
 
+        boardGrid = new JLayeredPane[8][8];
+
+        movePanels = new ArrayList<>();
+
         //make a chess game
         Game game = new Game();
         Board board = game.getBoard();
@@ -85,7 +97,8 @@ public class ChessGUI {
         for (int i = 7; i >= 0; i--) {
             for (int j = 0; j < 8; j++) {
                 //panel to hold background color
-                JPanel backgroundPanel = new JPanel(/*new BorderLayout()*/);
+                JLayeredPane backgroundPanel = new JLayeredPane();
+                backgroundPanel.setOpaque(true);
                 //backgroundPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));    //border to show edges
 
                 //alternate background colors
@@ -95,7 +108,9 @@ public class ChessGUI {
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
                     JLabel picLabel = PieceToImage(piece.toString());
+                    picLabel.setBounds(0,0,75,75);
                     backgroundPanel.add(picLabel);
+
                 }
 
                 int fixedI = i;
@@ -104,11 +119,12 @@ public class ChessGUI {
                 backgroundPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game, frame);
+                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game, frame, movePanels);
                     }
                 });
 
-                //boardGrid[j][i] = backgroundPanel;
+
+                boardGrid[j][i] = backgroundPanel;
                 boardPanel.add(backgroundPanel);
 
             }
@@ -122,16 +138,20 @@ public class ChessGUI {
         frame.setVisible(true);     //display the whole frame
     }
 
-    public void clickHandling(Board board, int fixedI, int fixedJ, JPanel backgroundPanel, Game game, JFrame frame){
+    public void clickHandling(Board board, int fixedI, int fixedJ, JLayeredPane backgroundPanel, Game game, JFrame frame, ArrayList<JLayeredPane> movePanels){
         if (selectedPiece == null) {
             //select first piece
             selectedPiece = board.pieceAt(fixedJ,fixedI);
             selectedPanel = backgroundPanel;
 
-            //highlight selected panel if there is a piece there
+            //if there is a piece there
             if (selectedPiece != null) {
+                //highlight the piece
                 backgroundPanel.setBackground(backgroundPanel.getBackground() == lightColor ? lightColorHighlight : darkColorHighlight);
+                //display all moves the piece can make
+                DisplayAvailableMoves(selectedPiece, board, movePanels);
             }
+
 
             System.out.println("PIECE SELECTED");   //TESTING
         } else if (selectedPiece != board.pieceAt(fixedJ,fixedI)) {
@@ -141,6 +161,9 @@ public class ChessGUI {
             //unhighlight selected panel
             selectedPanel.setBackground(selectedPanel.getBackground()==lightColorHighlight?lightColor:darkColor);
 
+            //remove all possible move circles
+            RemoveAvailableMoves(movePanels);
+
             //remove image from the new spot if there is one
             if (backgroundPanel.getComponents().length >= 1) {
                 backgroundPanel.remove(backgroundPanel.getComponents()[0]);
@@ -148,6 +171,7 @@ public class ChessGUI {
 
             //add image to new spot
             JLabel picLabel = PieceToImage(selectedPiece.toString());
+            picLabel.setBounds(0,0,75,75);
             backgroundPanel.add(picLabel);
 
             //remove image from the previous spot
@@ -185,5 +209,48 @@ public class ChessGUI {
         }
 
     }
+
+    public void DisplayAvailableMoves(Piece piece, Board board, ArrayList<JLayeredPane> movePanels) {
+        ArrayList<Move> moves = piece.getMoves(board);
+        for (Move move : moves) {
+            //create a circle for all your moves, solid if onto an empty square, outline if onto a piece
+
+            int j = move.getTo().colIndex();
+            int i = move.getTo().rowIndex();
+
+            JLabel grayCircle;
+            if (board.pieceAt(j,i) == null) {
+                grayCircle = LoadImage("Assets/greyCircle.png");
+            } else {
+                grayCircle = LoadImage("Assets/greyCircleOutline.png");
+            }
+            grayCircle.setBounds(0,0,75,75);
+            boardGrid[j][i].add(grayCircle);
+
+            //redraw that square to reflect addition
+            boardGrid[j][i].revalidate();
+            boardGrid[j][i].repaint();
+
+            //add to an array for easy deleting afterward
+            movePanels.add(boardGrid[j][i]);
+
+            //TODO big circle if piece there
+        }
+    }
+
+    public void RemoveAvailableMoves(ArrayList<JLayeredPane> movePanels) {
+        for (JLayeredPane panel : movePanels) {
+            //delete the last component (an outline if there was a piece there, or just the circle)
+            panel.remove(panel.getComponents()[panel.getComponents().length-1]);
+
+            //redraw that square to reflect removal
+            panel.revalidate();
+            panel.repaint();
+
+            //TODO delete the second object if there is a piece there
+        }
+        movePanels.clear();
+    }
+
 
 }
