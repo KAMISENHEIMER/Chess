@@ -92,7 +92,7 @@ public class ChessGUI {
                 //alternate background colors
                 backgroundPanel.setBackground((i + j) % 2 == 1?lightColor:darkColor);
 
-                //if there is a piece, assign text to that panel TODO make this an image
+                //if there is a piece, assign an image to that panel
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
                     JLabel picLabel = PieceToImage(piece.toString());
@@ -128,7 +128,7 @@ public class ChessGUI {
         boolean pieceExists = (board.pieceAt(fixedJ,fixedI) != null);
         boolean pieceCorrectColor = pieceExists && (board.pieceAt(fixedJ,fixedI).getColor() == game.getCurrentPlayer().getColor());
 
-        Move move;
+        Move move =new Move(new Location(0,0),new Location(0,0));
         boolean legalMove = false;
         if (selectedPiece != null) {
             move = new Move(selectedPiece.location, new Location(fixedJ, fixedI));
@@ -148,8 +148,7 @@ public class ChessGUI {
 
             System.out.println("PIECE SELECTED");   //TESTING
         } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
-            //move piece
-            //JLabel text = new JLabel(selectedPiece.toString()); //TODO make this an image
+            //all of this moves a piece
 
             //unhighlight selected panel
             selectedPanel.setBackground(selectedPanel.getBackground()==lightColorHighlight?lightColor:darkColor);
@@ -177,9 +176,7 @@ public class ChessGUI {
             backgroundPanel.repaint();
 
             //move the chess piece  TODO replace this with actual game logic
-            board.getBoard()[selectedPiece.location.colIndex()][selectedPiece.location.rowIndex()] = null;
-            board.getBoard()[fixedJ][fixedI] = selectedPiece;
-            selectedPiece.move(new Location(fixedJ,fixedI));
+            game.playGUI(move);
 
             //empty both variables for future use;
             selectedPiece = null;

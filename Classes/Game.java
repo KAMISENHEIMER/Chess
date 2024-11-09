@@ -49,7 +49,7 @@ public class Game{
     //starting method
 
     /**
-     * begins the game loop
+     * begins the game loop (based on console inputs)
      */
     public void start(){
         gameRunning = true;
@@ -83,6 +83,20 @@ public class Game{
         //switch color
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
     }
+
+    /**
+     * represents one turn of the game, move a piece to the given GUI location.
+     * @param move      the move given by the GUI clicks, assume it is legal.
+     */
+    public void playGUI(Move move){
+
+        //perform the move
+        board.movePiece(move, currentPlayer);
+
+        //switch color
+        currentPlayer = currentPlayer.getColor()==Color.White?black:white;
+    }
+
     //methods for checking move
 
     /**
