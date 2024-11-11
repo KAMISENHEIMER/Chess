@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Chess GUI class, contains everything related to displaying moves on the intractable GUI board.
+ */
 public class ChessGUI {
 
     //board colors
@@ -26,6 +29,9 @@ public class ChessGUI {
     Color darkColorHighlight = new Color(186,202,68);
     //TODO include other custom color schemes selectable in the color scheme
 
+    //frame that holds window
+    JFrame frame;
+
     //variable to hold whatever piece the player has clicked
     Piece selectedPiece;
     JLayeredPane selectedPanel;
@@ -36,7 +42,16 @@ public class ChessGUI {
     //arrayList to hold references to all potential move panels
     ArrayList<JLayeredPane> movePanels;
 
+    //Chess game
+    Game game;
+    Board board;
 
+    /**
+     * Tries to load a specific image from a file, and puts it into a JLabel.
+     *
+     * @param fileName      the file path as a string to the desired image
+     * @return              the JLabel which is scaled and contains the image
+     */
     public JLabel LoadImage(String fileName){
         BufferedImage pieceImage;
         try {
@@ -48,6 +63,11 @@ public class ChessGUI {
         return new JLabel(new ImageIcon(pieceImageScaled));
     }
 
+    /**
+     * Returns the image corresponding to a piece
+     * @param pieceStr      the piece's toString passed in
+     * @return              whatever image that represents that piece, as a JLabel
+     */
     public JLabel PieceToImage(String pieceStr){
         return switch (pieceStr) {
             case "wP" -> LoadImage("Assets/whitePawn.png");
@@ -66,9 +86,12 @@ public class ChessGUI {
         };
     }
 
+    /**
+     * ChessGUI constructor, makes the window, the board, the mouse events on every square, and initializes all pieces on the board. Also starts a chess game.
+     */
     public ChessGUI() {
-        //frame that holds window
-        JFrame frame = new JFrame("Chess Board");
+        //window frame setup
+        frame = new JFrame("Chess Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -82,8 +105,8 @@ public class ChessGUI {
         movePanels = new ArrayList<>();
 
         //make a chess game
-        Game game = new Game();
-        Board board = game.getBoard();
+        game = new Game();
+        board = game.getBoard();
 
         //loop through the entire board to create the background and pieces
         for (int i = 7; i >= 0; i--) {
@@ -111,7 +134,7 @@ public class ChessGUI {
                 backgroundPanel.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        clickHandling(board, fixedI, fixedJ, backgroundPanel, game, frame, movePanels);
+                        clickHandling(fixedI, fixedJ, backgroundPanel);
                     }
                 });
 
@@ -127,7 +150,13 @@ public class ChessGUI {
         frame.setVisible(true);     //display the whole frame
     }
 
-    public void clickHandling(Board board, int fixedI, int fixedJ, JLayeredPane backgroundPanel, Game game, JFrame frame, ArrayList<JLayeredPane> movePanels){
+    /**
+     * Handles selecting pieces, and calling to display possible moves, and then calling to move the piece whenever a piece is clicked.
+     * @param fixedI            row index of the click event
+     * @param fixedJ            column index of the click event
+     * @param backgroundPanel   the panel that contains the piece that was clicked
+     */
+    public void clickHandling(int fixedI, int fixedJ, JLayeredPane backgroundPanel){
 
         boolean pieceExists = (board.pieceAt(fixedJ,fixedI) != null);
         boolean pieceCorrectColor = pieceExists && (board.pieceAt(fixedJ,fixedI).getColor() == game.getCurrentPlayer().getColor());
@@ -136,7 +165,7 @@ public class ChessGUI {
         boolean legalMove = false;
         if (selectedPiece != null) {
             move = new Move(selectedPiece.location, new Location(fixedJ, fixedI));
-            move = correctMove(game, move);     //fixes move if it is a pawn promotion or castle
+            move = correctMove(move);     //fixes move if it is a pawn promotion or castle
             legalMove = game.checkLegalMove(move);
         }
         boolean notSamePiece = (selectedPiece != board.pieceAt(fixedJ, fixedI));
@@ -149,7 +178,7 @@ public class ChessGUI {
             //highlight the piece
             backgroundPanel.setBackground(backgroundPanel.getBackground() == lightColor ? lightColorHighlight : darkColorHighlight);
             //display all moves the piece can make
-            DisplayAvailableMoves(selectedPiece, board, movePanels);
+            DisplayAvailableMoves(selectedPiece);
 
             System.out.println("PIECE SELECTED");   //TESTING
         } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
@@ -162,7 +191,7 @@ public class ChessGUI {
             selectedPanel.setBackground(selectedPanel.getBackground()==lightColorHighlight?lightColor:darkColor);
 
             //remove all possible move circles
-            RemoveAvailableMoves(movePanels);
+            RemoveAvailableMoves();
 
             //remove image from the new spot if there is one
             if (backgroundPanel.getComponents().length >= 1) {
@@ -215,22 +244,26 @@ public class ChessGUI {
             selectedPanel = null;
 
             System.out.println("PIECE MOVED");   //TESTING
-            CheckForKingCapture(game, frame);
+            CheckForKingCapture();
         } else {    //every other click event, remove possible moves and unhighlight panel
             if (selectedPanel != null) {
                 selectedPanel.setBackground(selectedPanel.getBackground() == lightColorHighlight ? lightColor : darkColor);
             }
-            RemoveAvailableMoves(movePanels);
+            RemoveAvailableMoves();
 
             selectedPiece = null;
             selectedPanel = null;
         }
     }
 
-    public void CheckForKingCapture(Game game, JFrame frame) {
+    /**
+     * Checks both kings' locations to see if either is captured, and if so displays a message and ends the game.
+     */
+    public void CheckForKingCapture() {
         if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().location)) {
             System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
+            System.exit(0);
         }
         if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().location)) {
             System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
@@ -240,7 +273,11 @@ public class ChessGUI {
 
     }
 
-    public void DisplayAvailableMoves(Piece piece, Board board, ArrayList<JLayeredPane> movePanels) {
+    /**
+     * Displays gray cirlces indicating all the legal moves a piece can make
+     * @param piece     the piece to get all the moves from
+     */
+    public void DisplayAvailableMoves(Piece piece) {
         ArrayList<Move> moves = piece.getMoves(board);
         for (Move move : moves) {
             //create a circle for all your moves, solid if onto an empty square, outline if onto a piece
@@ -274,7 +311,10 @@ public class ChessGUI {
         }
     }
 
-    public void RemoveAvailableMoves(ArrayList<JLayeredPane> movePanels) {
+    /**
+     * Loops through all previously displayed possible moves and removes them from the screen
+     */
+    public void RemoveAvailableMoves() {
         for (JLayeredPane panel : movePanels) {
             //delete the last component (an outline if there was a piece there, or just the circle)
             panel.remove(panel.getComponents()[panel.getComponents().length-1]);
@@ -287,7 +327,12 @@ public class ChessGUI {
         movePanels.clear();
     }
 
-    public Move correctMove(Game game, Move move) {
+    /**
+     * Takes a move input and changes it if it is a castle or pawn promotion, to properly reflect the Move system.
+     * @param move  the inputted move (always from 1 spot to another)
+     * @return      the move with proper castles/pawn promotions
+     */
+    public Move correctMove(Move move) {
         //alter move if necessary (castle or pawn promotion)
         if (game.getBoard().pieceAt(move.getFrom()) == game.getCurrentPlayer().getKing() && !((King)game.getCurrentPlayer().getKing()).hasMoved) {
             if (move.getTo().colIndex() == 2) {     //leftside castle

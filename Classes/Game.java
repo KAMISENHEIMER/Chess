@@ -137,14 +137,27 @@ public class Game{
         return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
     }
 
+    /**
+     * retrieves the board object
+     * @return  the board object
+     */
     public Board getBoard() {
         return board;
     }
 
+    /**
+     * retrieves a references to whoever the current player is
+     * @return  the current player
+     */
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * retrieves one of the players in the game
+     * @param getWhite      true if you want to get white, false if you want to get black
+     * @return              a reference to the player that was chosen
+     */
     public Player getPlayer(boolean getWhite) {
         return getWhite?white:black;
     }
