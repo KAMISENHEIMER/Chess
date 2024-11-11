@@ -19,6 +19,12 @@ import java.util.ArrayList;
  */
 public class ChessGUI {
 
+    //variables for sizing
+    int windowSize = 512;       //try to keep to factors of 2
+    int barSize = windowSize/16;
+    int pieceScale = windowSize/8;
+    int pieceArtScale = (int)(pieceScale*.88);
+
     //board colors
     //Color lightColor = new Color(240, 217, 181);
     //Color darkColor = new Color(181, 136, 99);
@@ -58,7 +64,7 @@ public class ChessGUI {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Image pieceImageScaled = pieceImage.getScaledInstance(64,64,Image.SCALE_DEFAULT);
+        Image pieceImageScaled = pieceImage.getScaledInstance(pieceArtScale,pieceArtScale,Image.SCALE_DEFAULT);
         return new JLabel(new ImageIcon(pieceImageScaled));
     }
 
@@ -93,11 +99,18 @@ public class ChessGUI {
         frame = new JFrame("Chess Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.setResizable(false);
 
         //panel that holds board
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
-        boardPanel.setPreferredSize(new Dimension(600, 600));
+        boardPanel.setPreferredSize(new Dimension(windowSize, windowSize));
+
+        JPanel whiteBar = new JPanel();
+        whiteBar.setPreferredSize(new Dimension(windowSize, barSize));
+        JPanel blackBar = new JPanel();
+        blackBar.setPreferredSize(new Dimension(windowSize, barSize));
+
 
         boardGrid = new JLayeredPane[8][8];
 
@@ -122,7 +135,7 @@ public class ChessGUI {
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
                     JLabel picLabel = PieceToImage(piece.toString());
-                    picLabel.setBounds(0,0,75,75);
+                    picLabel.setBounds(0,0,pieceScale,pieceScale);
                     backgroundPanel.add(picLabel);
 
                 }
@@ -142,7 +155,10 @@ public class ChessGUI {
             }
         }
 
-        frame.add(boardPanel);      //puts board inside window
+        frame.add(blackBar, BorderLayout.PAGE_START);
+        frame.add(whiteBar, BorderLayout.PAGE_END);
+
+        frame.add(boardPanel, BorderLayout.CENTER);      //puts board inside window
         frame.pack();       //displays panel inside frame
         frame.setLocationRelativeTo(null);  //puts window in the middle of screen
 
@@ -199,7 +215,7 @@ public class ChessGUI {
 
             //add image to new spot
             JLabel picLabel = PieceToImage(board.pieceAt(fixedJ,fixedI).toString());   //have to get the piece at the board location because of pawns upgrading
-            picLabel.setBounds(0,0,75,75);
+            picLabel.setBounds(0,0,pieceScale,pieceScale);
             backgroundPanel.add(picLabel);
 
             //remove image from the previous spot
@@ -298,7 +314,9 @@ public class ChessGUI {
             } else {
                 grayCircle = LoadImage("Assets/greyCircleOutline.png");
             }
-            grayCircle.setBounds(0,0,75,75);
+            grayCircle.setBounds(0,0,pieceScale,pieceScale);
+            //grayCircle.setLocationRelativeTo(null);
+
             boardGrid[j][i].add(grayCircle);
 
             //redraw that square to reflect addition
