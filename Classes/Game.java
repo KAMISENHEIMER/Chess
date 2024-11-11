@@ -49,7 +49,7 @@ public class Game{
     //starting method
 
     /**
-     * begins the game loop
+     * begins the game loop (based on console inputs)
      */
     public void start(){
         gameRunning = true;
@@ -83,6 +83,20 @@ public class Game{
         //switch color
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
     }
+
+    /**
+     * represents one turn of the game, move a piece to the given GUI location.
+     * @param move      the move given by the GUI clicks, assume it is legal.
+     */
+    public void playGUI(Move move){
+
+        //perform the move
+        board.movePiece(move, currentPlayer);
+
+        //switch color
+        currentPlayer = currentPlayer.getColor()==Color.White?black:white;
+    }
+
     //methods for checking move
 
     /**
@@ -121,6 +135,31 @@ public class Game{
         }
         //returns whether that move is in the moves list of that piece
         return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
+    }
+
+    /**
+     * retrieves the board object
+     * @return  the board object
+     */
+    public Board getBoard() {
+        return board;
+    }
+
+    /**
+     * retrieves a references to whoever the current player is
+     * @return  the current player
+     */
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    /**
+     * retrieves one of the players in the game
+     * @param getWhite      true if you want to get white, false if you want to get black
+     * @return              a reference to the player that was chosen
+     */
+    public Player getPlayer(boolean getWhite) {
+        return getWhite?white:black;
     }
 
 }

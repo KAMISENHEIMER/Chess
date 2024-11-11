@@ -1,7 +1,6 @@
 package Classes;
 
-import Classes.Location;
-import Classes.Piece;
+import Classes.Pieces.Piece;
 import Classes.Pieces.*;
 import Utility.Enums.Color;
 
@@ -113,6 +112,9 @@ public class Board{
             //delete rook and king from old squares
             board[0][row] = null;
             board[4][row] = null;
+            //update pieces' stored location
+            board[3][row].move(new Location(3,row));
+            board[2][row].move(new Location(2,row));
         } else if(move.castleRight){
             int row = (player.getColor() == Color.White ? 0 : 7);
             //rook swaps to spot
@@ -124,6 +126,9 @@ public class Board{
             //delete rook and king from old squares
             board[7][row] = null;
             board[4][row] = null;
+            //update pieces' stored location
+            board[5][row].move(new Location(5,row));
+            board[6][row].move(new Location(6,row));
         } else if (move.promoteTo != 0) {       //pawn promotion case
             Location from = move.getFrom();
             Location to = move.getTo();
@@ -132,20 +137,20 @@ public class Board{
             Piece promotedPiece;
             switch (move.promoteTo) {
                 case 'Q':
-                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+                    promotedPiece = new Queen(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'N':
-                    promotedPiece = new Knight(pawn.getColor(), pawn.location);
+                    promotedPiece = new Knight(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'R':
-                    promotedPiece = new Rook(pawn.getColor(), pawn.location);
+                    promotedPiece = new Rook(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'B':
-                    promotedPiece = new Bishop(pawn.getColor(), pawn.location);
+                    promotedPiece = new Bishop(pawn.getColor(), pawn.getLocation());
                     break;
                 default:
                     //shouldn't ever happen, something went wrong, default to queen
-                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+                    promotedPiece = new Queen(pawn.getColor(), pawn.getLocation());
             }
             board[to.colIndex()][to.rowIndex()] = promotedPiece;
             board[to.colIndex()][to.rowIndex()].move(to);
@@ -171,5 +176,13 @@ public class Board{
             capturedPieces.add(board[to.colIndex()][to.rowIndex()]);
             //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
         }
+    }
+
+    /**
+     * returns the board, for altering it directly
+     * @return      the board object which contains all pieces
+     */
+    public Piece[][] getBoard() {
+        return board;
     }
 }

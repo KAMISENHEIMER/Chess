@@ -3,7 +3,6 @@ package Classes.Pieces;
 import Classes.Board;
 import Classes.Location;
 import Classes.Move;
-import Classes.Piece;
 import Utility.Enums;
 
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 */
 public class King extends Piece {
 
-    boolean hasMoved; // For castling
+    public boolean hasMoved; // For castling
 
     /**
      * Constructs a new king piece
@@ -37,8 +36,8 @@ public class King extends Piece {
 
         // check all adjacent locations (don't worry about moving onto itself because of other checks in place)
         for (int i = -1; i <= 1; i++) {
-            for (int j = -1; i <= 1; i++) {
-                if (canMove(this.location,i,j,board)) {
+            for (int j = -1; j <= 1; j++) {
+                if (canMove(this.location,j,i,board)) {
                     moves.add(new Move(this.location,new Location(this.location.colIndex()+j,this.location.rowIndex()+i)));
                 }
             }

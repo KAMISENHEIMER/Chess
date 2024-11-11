@@ -1,5 +1,8 @@
-package Classes;
+package Classes.Pieces;
 
+import Classes.Board;
+import Classes.Location;
+import Classes.Move;
 import Utility.Enums.*;
 
 import java.util.ArrayList;
@@ -38,6 +41,12 @@ public abstract class Piece {
     public Color getColor() {
         return color;
     }
+
+    /**
+     * Getter for piece location
+     * @return color Piece's location
+     */
+    public Location getLocation() { return location; }
 
     /**
      * Sets piece's location
