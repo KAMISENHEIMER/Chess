@@ -1,7 +1,6 @@
 package Classes;
 
-import Classes.Move;
-import Classes.Piece;
+import Classes.Pieces.Piece;
 import Utility.Enums.Color;
 
 import java.util.ArrayList;

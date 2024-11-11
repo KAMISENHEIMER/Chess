@@ -3,7 +3,6 @@ package Classes.Pieces;
 import Classes.Board;
 import Classes.Location;
 import Classes.Move;
-import Classes.Piece;
 import Utility.Enums.*;
 
 import java.util.ArrayList;

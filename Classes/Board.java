@@ -1,7 +1,6 @@
 package Classes;
 
-import Classes.Location;
-import Classes.Piece;
+import Classes.Pieces.Piece;
 import Classes.Pieces.*;
 import Utility.Enums.Color;
 
@@ -138,20 +137,20 @@ public class Board{
             Piece promotedPiece;
             switch (move.promoteTo) {
                 case 'Q':
-                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+                    promotedPiece = new Queen(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'N':
-                    promotedPiece = new Knight(pawn.getColor(), pawn.location);
+                    promotedPiece = new Knight(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'R':
-                    promotedPiece = new Rook(pawn.getColor(), pawn.location);
+                    promotedPiece = new Rook(pawn.getColor(), pawn.getLocation());
                     break;
                 case 'B':
-                    promotedPiece = new Bishop(pawn.getColor(), pawn.location);
+                    promotedPiece = new Bishop(pawn.getColor(), pawn.getLocation());
                     break;
                 default:
                     //shouldn't ever happen, something went wrong, default to queen
-                    promotedPiece = new Queen(pawn.getColor(), pawn.location);
+                    promotedPiece = new Queen(pawn.getColor(), pawn.getLocation());
             }
             board[to.colIndex()][to.rowIndex()] = promotedPiece;
             board[to.colIndex()][to.rowIndex()].move(to);

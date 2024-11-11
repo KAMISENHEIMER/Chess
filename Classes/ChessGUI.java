@@ -1,13 +1,12 @@
 package Classes;
 import Classes.Pieces.King;
 import Classes.Pieces.Pawn;
+import Classes.Pieces.Piece;
 import Utility.Enums;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -164,7 +163,7 @@ public class ChessGUI {
         Move move =new Move(new Location(0,0),new Location(0,0));
         boolean legalMove = false;
         if (selectedPiece != null) {
-            move = new Move(selectedPiece.location, new Location(fixedJ, fixedI));
+            move = new Move(selectedPiece.getLocation(), new Location(fixedJ, fixedI));
             move = correctMove(move);     //fixes move if it is a pawn promotion or castle
             legalMove = game.checkLegalMove(move);
         }
@@ -260,12 +259,12 @@ public class ChessGUI {
      * Checks both kings' locations to see if either is captured, and if so displays a message and ends the game.
      */
     public void CheckForKingCapture() {
-        if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().location)) {
+        if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().getLocation())) {
             System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
             System.exit(0);
         }
-        if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().location)) {
+        if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().getLocation())) {
             System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, White wins!");
             System.exit(0);
@@ -285,10 +284,10 @@ public class ChessGUI {
             int i;
             if (move.castleLeft) {
                 j = 2;
-                i = (piece.color == Enums.Color.White)?0:7;
+                i = (piece.getColor() == Enums.Color.White)?0:7;
             } else if (move.castleRight) {
                 j = 6;
-                i = (piece.color == Enums.Color.White)?0:7;;
+                i = (piece.getColor() == Enums.Color.White)?0:7;;
             } else {
                 j = move.getTo().colIndex();
                 i = move.getTo().rowIndex();
