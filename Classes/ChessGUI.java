@@ -273,7 +273,7 @@ public class ChessGUI {
     }
 
     /**
-     * Displays gray cirlces indicating all the legal moves a piece can make
+     * Displays gray circles indicating all the legal moves a piece can make
      * @param piece     the piece to get all the moves from
      */
     public void DisplayAvailableMoves(Piece piece) {
@@ -287,7 +287,7 @@ public class ChessGUI {
                 i = (piece.getColor() == Enums.Color.White)?0:7;
             } else if (move.castleRight) {
                 j = 6;
-                i = (piece.getColor() == Enums.Color.White)?0:7;;
+                i = (piece.getColor() == Enums.Color.White)?0:7;
             } else {
                 j = move.getTo().colIndex();
                 i = move.getTo().rowIndex();
