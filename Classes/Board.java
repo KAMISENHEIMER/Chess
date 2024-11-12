@@ -185,4 +185,56 @@ public class Board{
     public Piece[][] getBoard() {
         return board;
     }
+
+    /**
+     * does the opposite of a move, including pawn promotions and castles, with some careful logic for detecting first moves.
+     * @param move              the move to be undone
+     * @param currentPlayer     the player who made the move
+     */
+    public void undo(Move move, Player currentPlayer) {
+        if (move.castleLeft) {
+            int row = (currentPlayer.getColor() == Color.White ? 0 : 7);
+            //move king and rook to new squares
+            board[0][row] = board[3][row];
+            board[4][row] = board[2][row];
+            //delete rook and king from old squares
+            board[3][row] = null;
+            board[2][row] = null;
+            //update pieces' stored location
+            board[0][row].unmove(new Location(0, row));
+            board[4][row].unmove(new Location(4, row));
+            ((Rook)(board[0][row])).undoCastle();
+            ((King)(board[4][row])).undoCastle();
+        } else if (move.castleRight) {
+            int row = (currentPlayer.getColor() == Color.White ? 0 : 7);
+            //move king and rook to new squares
+            board[7][row] = board[5][row];
+            board[4][row] = board[6][row];
+            //delete rook and king from old squares
+            board[7][row] = null;
+            board[4][row] = null;
+            //update pieces' stored location
+            board[7][row].unmove(new Location(7, row));
+            board[4][row].unmove(new Location(4, row));
+            ((Rook)(board[7][row])).undoCastle();
+            ((King)(board[4][row])).undoCastle();
+        } else {
+            Location from = move.getFrom();
+            Location to = move.getTo();
+
+            if (move.promoteTo!=0) {    //pawn promotion, switch the piece back into a pawn and continue
+                board[to.colIndex()][to.rowIndex()] = new Pawn(currentPlayer.getColor(), to, true);
+            }
+
+
+            //TODO check if it was their first move
+
+            //normal move
+            board[from.colIndex()][from.rowIndex()] = board[to.colIndex()][to.rowIndex()];
+            board[from.colIndex()][from.rowIndex()].unmove(from);
+            board[to.colIndex()][to.rowIndex()] = null;
+            //TODO handle taking pieces
+        }
+    }
+
 }

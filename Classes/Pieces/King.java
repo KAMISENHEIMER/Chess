@@ -75,6 +75,13 @@ public class King extends Piece {
     }
 
     /**
+     * sets has moved to false, used in Undos
+     */
+    public void undoCastle() {
+        hasMoved = false;
+    }
+
+    /**
      * Represents piece as string, for displaying on board
      *
      * @return King piece represented as string. Ex) wK for white king

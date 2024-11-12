@@ -19,7 +19,7 @@ public class Game{
     private Board board;
     private Player white;
     private Player black;
-    //constructor
+    private ArrayList<Move> moveHistory;
 
     /**
      * Game constructor, initializes all variables, and adds all pieces to their respective player lists
@@ -30,6 +30,7 @@ public class Game{
         this.currentPlayer = this.white;
         this.board = new Board();
         this.gameRunning = false;
+        this.moveHistory = new ArrayList<>();
 
         //add all pieces to their respective players
         for (int i = 0; i < 2; i++) {
@@ -92,6 +93,9 @@ public class Game{
 
         //perform the move
         board.movePiece(move, currentPlayer);
+
+        //add the move into the move history
+        moveHistory.add(move);
 
         //switch color
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
@@ -162,4 +166,21 @@ public class Game{
         return getWhite?white:black;
     }
 
+    /**
+     * undoes a move, switches the color and adjusts the history
+     */
+    public void undo() {
+        if (moveHistory.isEmpty()) {    //tried undoing the first move
+            return;
+        }
+
+        //switch color
+        currentPlayer = currentPlayer.getColor()==Color.White?black:white;
+
+        //undo the last move on the board
+        board.undo(moveHistory.get(moveHistory.size()-1), currentPlayer);
+
+        //remove the move from the history
+        moveHistory.remove(moveHistory.get(moveHistory.size()-1));
+    }
 }

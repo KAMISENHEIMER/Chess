@@ -26,6 +26,18 @@ public class Pawn extends Piece {
     }
 
     /**
+     * Constructs a new Pawn piece, and specify if it has moved or not, used in undoes.
+     *
+     * @param color Color of piece
+     * @param location Location piece spawns in
+     * @param hasMoved whether the piece has already moved or not
+     */
+    public Pawn(Color color, Location location, boolean hasMoved) {
+        super(color, location);
+        this.hasMoved = hasMoved;
+    }
+
+    /**
      * Gets a list of all possible moves
      *
      * @param board Reference to game board
