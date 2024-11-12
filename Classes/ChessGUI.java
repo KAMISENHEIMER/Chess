@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class ChessGUI {
 
     //variables for sizing
-    int windowSize = 512;       //try to keep to factors of 2
+    int windowSize = 512;       //try to keep to factors of 2, 512 is good
     int barSize = windowSize/16;
     int pieceScale = windowSize/8;
     int pieceArtScale = (int)(pieceScale*.88);
@@ -36,6 +36,12 @@ public class ChessGUI {
 
     //frame that holds window
     JFrame frame;
+    //content layered pane for board and menus
+    JLayeredPane content;
+    //panel that holds board.
+    JPanel boardPanel;
+    //panel that holds settings menu.
+    JPanel settingsMenu;
 
     //variable to hold whatever piece the player has clicked
     Piece selectedPiece;
@@ -101,20 +107,65 @@ public class ChessGUI {
         frame.setLayout(new BorderLayout());
         frame.setResizable(false);
 
+        //layered pane to hold board and menus
+        content = new JLayeredPane();
+        content.setPreferredSize(new Dimension(windowSize, windowSize));
+
         //panel that holds board
-        JPanel boardPanel = new JPanel();
+        boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
         boardPanel.setPreferredSize(new Dimension(windowSize, windowSize));
+        boardPanel.setBounds(0,0,windowSize,windowSize);
 
+        //player bars (top and bottom)
         JPanel whiteBar = new JPanel();
         whiteBar.setPreferredSize(new Dimension(windowSize, barSize));
+        whiteBar.setLayout(new BorderLayout());
+
         JPanel blackBar = new JPanel();
         blackBar.setPreferredSize(new Dimension(windowSize, barSize));
+        blackBar.setLayout(new BorderLayout());
 
+        JPanel settingsButton = new JPanel();
+        settingsButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
+        settingsButton.setBackground(Color.darkGray);
+        blackBar.add(settingsButton, BorderLayout.LINE_END);
+        settingsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                displaySettingsMenu();
+            }
+        });
 
+        //settings menu
+        settingsMenu = new JPanel();
+        buildSettingsMenu();
+
+        //lists that hold references to panels
         boardGrid = new JLayeredPane[8][8];
-
         movePanels = new ArrayList<>();
+
+        //creates game, board, pieces, and click events
+        NewGame();
+
+        //put board and menu onto the content layered pane
+        content.add(settingsMenu);      //puts the settings menu into board panel
+        content.add(boardPanel);      //puts board inside content
+
+        //loads all parts into frame
+        frame.add(blackBar, BorderLayout.PAGE_START);
+        frame.add(whiteBar, BorderLayout.PAGE_END);
+        frame.add(content, BorderLayout.CENTER);      //puts content (board and menus) inside window
+        frame.pack();       //displays panel inside frame
+        frame.setLocationRelativeTo(null);  //puts window in the middle of screen
+
+        frame.setVisible(true);     //display the whole frame
+    }
+
+    /**
+     * Creates a new chess game, displays it onto the board, and initializes pieces and click events
+     */
+    public void NewGame() {
 
         //make a chess game
         game = new Game();
@@ -154,15 +205,6 @@ public class ChessGUI {
                 boardPanel.add(backgroundPanel);
             }
         }
-
-        frame.add(blackBar, BorderLayout.PAGE_START);
-        frame.add(whiteBar, BorderLayout.PAGE_END);
-
-        frame.add(boardPanel, BorderLayout.CENTER);      //puts board inside window
-        frame.pack();       //displays panel inside frame
-        frame.setLocationRelativeTo(null);  //puts window in the middle of screen
-
-        frame.setVisible(true);     //display the whole frame
     }
 
     /**
@@ -365,6 +407,37 @@ public class ChessGUI {
             }   //TODO bring up a menu for pawn promotions
         }
         return move;
+    }
+
+    /**
+     * toggles where the settings menu is displayed or not
+     */
+    public void displaySettingsMenu() {
+        settingsMenu.setVisible(!settingsMenu.isVisible());
+    }
+
+    /**
+     * builds all buttons that sit inside of the settings menu
+     */
+    public void buildSettingsMenu() {
+        settingsMenu.setBackground(Color.lightGray);
+        settingsMenu.setPreferredSize(new Dimension(windowSize/2, windowSize/2));
+        settingsMenu.setBounds(0,0,windowSize/2,windowSize/2);
+        settingsMenu.setVisible(false);
+        settingsMenu.setLayout(new BoxLayout(settingsMenu,BoxLayout.PAGE_AXIS));
+        //settingsMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //settingsMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
+
+        JLabel newGameButton = new JLabel("New Game");
+        JLabel saveGameButton = new JLabel("Save Game");
+        JLabel loadGameButton = new JLabel("Load Game");
+        newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        settingsMenu.add(newGameButton);
+        settingsMenu.add(saveGameButton);
+        settingsMenu.add(loadGameButton);
+
     }
 
 }
