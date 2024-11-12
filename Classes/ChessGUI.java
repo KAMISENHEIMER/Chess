@@ -128,6 +128,7 @@ public class ChessGUI {
         blackBar.setPreferredSize(new Dimension(windowSize, barSize));
         blackBar.setLayout(new BorderLayout());
 
+        //settings button
         JPanel settingsButton = new JPanel();
         settingsButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
         settingsButton.setBackground(Color.lightGray);
@@ -141,6 +142,21 @@ public class ChessGUI {
         JLabel settingsButtonIcon = LoadImage("Assets/settingsMenu.png");
         settingsButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
         settingsButton.add(settingsButtonIcon);
+
+        //undo button
+        JPanel undoButton = new JPanel();
+        undoButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
+        undoButton.setBackground(Color.lightGray);
+        whiteBar.add(undoButton, BorderLayout.LINE_END);
+        undoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                undo();
+            }
+        });
+        JLabel undoButtonIcon = LoadImage("Assets/undoButton.png");
+        undoButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
+        undoButton.add(undoButtonIcon);
 
         //settings menu
         buildSettingsMenu();
@@ -474,6 +490,32 @@ public class ChessGUI {
         settingsMenu.add(loadGameButton);
         settingsMenu.add(saveInput);
 
+    }
+
+    /**
+     * calls a game undo, and updates the GUI
+     */
+    public void undo() {
+        game.undo();
+        //TODO find the specific pieces and undo them
+
+        //delete possible move drawings to prevent issues;
+        RemoveAvailableMoves();
+
+        //redraws entire board, this should be changed later for something more specific to the undone move
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (boardGrid[j][i].getComponents().length >= 1 && board.pieceAt(j,i) == null) {    //remove image if there is no piece
+                    boardGrid[j][i].remove(boardGrid[j][i].getComponents()[0]);
+                    boardGrid[j][i].revalidate();
+                    boardGrid[j][i].repaint();
+                } else if (boardGrid[j][i].getComponents().length == 0 && board.pieceAt(j,i) != null) {     //add image if there is a piece
+                    JLabel picLabel = PieceToImage(board.pieceAt(j,i).toString());   //have to get the piece at the board location because of pawns upgrading
+                    picLabel.setBounds(0,0,pieceScale,pieceScale);
+                    boardGrid[j][i].add(picLabel);
+                }
+            }
+        }
     }
 
 }
