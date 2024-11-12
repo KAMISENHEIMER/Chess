@@ -24,6 +24,8 @@ public class ChessGUI {
     int barSize = windowSize/16;
     int pieceScale = windowSize/8;
     int pieceArtScale = (int)(pieceScale*.88);
+    int settingsMenuScale = (int)(windowSize*.7);
+    int settingsMenuPosition = (windowSize/2)-(settingsMenuScale/2);
 
     //board colors
     //Color lightColor = new Color(240, 217, 181);
@@ -128,7 +130,7 @@ public class ChessGUI {
 
         JPanel settingsButton = new JPanel();
         settingsButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
-        settingsButton.setBackground(Color.darkGray);
+        settingsButton.setBackground(Color.lightGray);
         blackBar.add(settingsButton, BorderLayout.LINE_END);
         settingsButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -136,9 +138,11 @@ public class ChessGUI {
                 displaySettingsMenu();
             }
         });
+        JLabel settingsButtonIcon = LoadImage("Assets/settingsMenu.png");
+        settingsButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
+        settingsButton.add(settingsButtonIcon);
 
         //settings menu
-        settingsMenu = new JPanel();
         buildSettingsMenu();
 
         //lists that hold references to panels
@@ -166,6 +170,9 @@ public class ChessGUI {
      * Creates a new chess game, displays it onto the board, and initializes pieces and click events
      */
     public void NewGame() {
+
+        //clear out old grid (if there is any)
+        boardPanel.removeAll();
 
         //make a chess game
         game = new Game();
@@ -417,26 +424,55 @@ public class ChessGUI {
     }
 
     /**
-     * builds all buttons that sit inside of the settings menu
+     * builds all buttons that sit inside the settings menu
      */
     public void buildSettingsMenu() {
+        settingsMenu = new JPanel();
         settingsMenu.setBackground(Color.lightGray);
-        settingsMenu.setPreferredSize(new Dimension(windowSize/2, windowSize/2));
-        settingsMenu.setBounds(0,0,windowSize/2,windowSize/2);
+        settingsMenu.setPreferredSize(new Dimension(settingsMenuScale, settingsMenuScale));
+        settingsMenu.setBounds(settingsMenuPosition,settingsMenuPosition,settingsMenuScale,settingsMenuScale);
         settingsMenu.setVisible(false);
         settingsMenu.setLayout(new BoxLayout(settingsMenu,BoxLayout.PAGE_AXIS));
+
+        //TODO CENTER SETTINGS MENU
         //settingsMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
         //settingsMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
+        settingsMenu.setBorder(BorderFactory.createEmptyBorder(20,20,50,20));
 
-        JLabel newGameButton = new JLabel("New Game");
-        JLabel saveGameButton = new JLabel("Save Game");
-        JLabel loadGameButton = new JLabel("Load Game");
+
+        JPanel newGameButton = new JPanel();
+        JPanel saveGameButton = new JPanel();
+        JPanel loadGameButton = new JPanel();
+
+        JLabel newGameText = new JLabel("New Game");
+        JLabel saveGameText = new JLabel("Save Game");
+        JLabel loadGameText = new JLabel("Load Game");
+        JTextField saveInput = new JTextField();
+
+        newGameButton.add(newGameText);
+        saveGameButton.add(saveGameText);
+        loadGameButton.add(loadGameText);
+
         newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         saveGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         loadGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        newGameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                NewGame();
+                boardPanel.revalidate();    //redraw the new board
+                boardPanel.repaint();
+                displaySettingsMenu();      //get around the menu being hidden behind the new board
+                displaySettingsMenu();
+            }
+        });
+
+
         settingsMenu.add(newGameButton);
         settingsMenu.add(saveGameButton);
         settingsMenu.add(loadGameButton);
+        settingsMenu.add(saveInput);
 
     }
 
