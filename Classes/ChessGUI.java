@@ -505,11 +505,16 @@ public class ChessGUI {
         //redraws entire board, this should be changed later for something more specific to the undone move
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (boardGrid[j][i].getComponents().length >= 1 && board.pieceAt(j,i) == null) {    //remove image if there is no piece
+                if (boardGrid[j][i].getComponents().length >= 1) {    //remove every image, doing this because of dang piece taking in undos
                     boardGrid[j][i].remove(boardGrid[j][i].getComponents()[0]);
                     boardGrid[j][i].revalidate();
                     boardGrid[j][i].repaint();
-                } else if (boardGrid[j][i].getComponents().length == 0 && board.pieceAt(j,i) != null) {     //add image if there is a piece
+                }
+                /* if (boardGrid[j][i].getComponents().length >= 1 && board.pieceAt(j,i) == null) {    //remove image if there is no piece
+                    boardGrid[j][i].remove(boardGrid[j][i].getComponents()[0]);
+                    boardGrid[j][i].revalidate();
+                    boardGrid[j][i].repaint();
+                } else */ if (boardGrid[j][i].getComponents().length == 0 && board.pieceAt(j,i) != null) {     //add image if there is a piece
                     JLabel picLabel = PieceToImage(board.pieceAt(j,i).toString());   //have to get the piece at the board location because of pawns upgrading
                     picLabel.setBounds(0,0,pieceScale,pieceScale);
                     boardGrid[j][i].add(picLabel);

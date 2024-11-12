@@ -191,7 +191,7 @@ public class Board{
      * @param move              the move to be undone
      * @param currentPlayer     the player who made the move
      */
-    public void undo(Move move, Player currentPlayer) {
+    public void undo(Move move, Player currentPlayer, Player otherPlayer) {
         if (move.castleLeft) {
             int row = (currentPlayer.getColor() == Color.White ? 0 : 7);
             //move king and rook to new squares
@@ -233,7 +233,12 @@ public class Board{
             board[from.colIndex()][from.rowIndex()] = board[to.colIndex()][to.rowIndex()];
             board[from.colIndex()][from.rowIndex()].unmove(from);
             board[to.colIndex()][to.rowIndex()] = null;
-            //TODO handle taking pieces
+
+            //check most recently captured piece and see if it was here
+            if (!capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
+                board[to.colIndex()][to.rowIndex()] = capturedPieces.get(capturedPieces.size()-1);
+                capturedPieces.remove(capturedPieces.size()-1);
+            }
         }
     }
 

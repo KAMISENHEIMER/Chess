@@ -178,7 +178,8 @@ public class Game{
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
 
         //undo the last move on the board
-        board.undo(moveHistory.get(moveHistory.size()-1), currentPlayer);
+        Player otherPlayer = currentPlayer.getColor()==Color.White?black:white;
+        board.undo(moveHistory.get(moveHistory.size()-1), currentPlayer, otherPlayer);
 
         //remove the move from the history
         moveHistory.remove(moveHistory.get(moveHistory.size()-1));
