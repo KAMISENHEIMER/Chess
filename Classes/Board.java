@@ -132,7 +132,7 @@ public class Board{
         } else if (move.promoteTo != 0) {       //pawn promotion case
             Location from = move.getFrom();
             Location to = move.getTo();
-            capturePiece(to, player);
+            capturePiece(move, player);
             Piece pawn = board[from.colIndex()][from.rowIndex()];
             Piece promotedPiece;
             switch (move.promoteTo) {
@@ -155,11 +155,10 @@ public class Board{
             board[to.colIndex()][to.rowIndex()] = promotedPiece;
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
-        } else {
+        } else {    //otherwise, simply move piece
             Location from = move.getFrom();
             Location to = move.getTo();
-            //otherwise, simply move piece
-            capturePiece(to, player);
+            capturePiece(move, player);
             board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
@@ -168,13 +167,15 @@ public class Board{
 
     /**
      * helper function to check if there is a piece at a location and update the related piece lists
-     * @param to        the location of the piece potentially being captured
+     * @param move      move of the piece capturing
      * @param player    the player capturing the piece
      */
-    public void capturePiece(Location to, Player player) {
+    public void capturePiece(Move move, Player player) {
+        Location to = move.getTo();
         if (board[to.colIndex()][to.rowIndex()] != null) {
             capturedPieces.add(board[to.colIndex()][to.rowIndex()]);
             //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
+            move.tookPiece = true;
         }
     }
 
@@ -235,7 +236,7 @@ public class Board{
             board[to.colIndex()][to.rowIndex()] = null;
 
             //check most recently captured piece and see if it was here
-            if (!capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
+            if (move.tookPiece && !capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
                 board[to.colIndex()][to.rowIndex()] = capturedPieces.get(capturedPieces.size()-1);
                 capturedPieces.remove(capturedPieces.size()-1);
             }
