@@ -260,7 +260,6 @@ public class ChessGUI {
             //display all moves the piece can make
             DisplayAvailableMoves(selectedPiece);
 
-            System.out.println("PIECE SELECTED");   //TESTING
         } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
             //all of this moves a piece
 
@@ -292,8 +291,6 @@ public class ChessGUI {
             backgroundPanel.revalidate();
             backgroundPanel.repaint();
 
-            System.out.println(move.castleLeft);    //TESTING
-
             //repaint the rook's squares if the move was a castle
             int row = (game.getCurrentPlayer().getColor() == Enums.Color.White ? 7 : 0);
             if (move.castleLeft) {
@@ -306,7 +303,6 @@ public class ChessGUI {
                 boardGrid[0][row].remove(boardGrid[0][row].getComponents()[0]);
                 boardGrid[0][row].revalidate();
                 boardGrid[0][row].repaint();    //repaint rook's first square
-                System.out.println("repainted: 0 "+row);
             } else if (move.castleRight) {
                 JLabel rookLabel = PieceToImage(board.pieceAt(5,row).toString());
                 rookLabel.setBounds(0,0,75,75);
@@ -323,7 +319,6 @@ public class ChessGUI {
             selectedPiece = null;
             selectedPanel = null;
 
-            System.out.println("PIECE MOVED");   //TESTING
             CheckForKingCapture();
         } else {    //every other click event, remove possible moves and unhighlight panel
             if (selectedPanel != null) {
@@ -341,12 +336,10 @@ public class ChessGUI {
      */
     public void CheckForKingCapture() {
         if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().getLocation())) {
-            System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
             System.exit(0);
         }
         if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().getLocation())) {
-            System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, White wins!");
             System.exit(0);
         }

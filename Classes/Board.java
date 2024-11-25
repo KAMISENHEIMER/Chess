@@ -212,8 +212,8 @@ public class Board{
             board[7][row] = board[5][row];
             board[4][row] = board[6][row];
             //delete rook and king from old squares
-            board[7][row] = null;
-            board[4][row] = null;
+            board[5][row] = null;
+            board[6][row] = null;
             //update pieces' stored location
             board[7][row].unmove(new Location(7, row));
             board[4][row].unmove(new Location(4, row));
@@ -235,11 +235,12 @@ public class Board{
             board[from.colIndex()][from.rowIndex()].unmove(from);
             board[to.colIndex()][to.rowIndex()] = null;
 
-            //check most recently captured piece and see if it was here
+            //check if the move captured another piece, and if so, put it back
             if (move.tookPiece && !capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
                 board[to.colIndex()][to.rowIndex()] = capturedPieces.get(capturedPieces.size()-1);
                 capturedPieces.remove(capturedPieces.size()-1);
             }
+            
         }
     }
 

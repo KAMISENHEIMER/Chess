@@ -182,6 +182,6 @@ public class Game{
         board.undo(moveHistory.get(moveHistory.size()-1), currentPlayer, otherPlayer);
 
         //remove the move from the history
-        moveHistory.remove(moveHistory.get(moveHistory.size()-1));
+        moveHistory.remove(moveHistory.size()-1);
     }
 }
