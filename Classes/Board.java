@@ -162,6 +162,12 @@ public class Board{
             board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
+
+            //if the piece moved a piece which hasn't been moved yet, alter the move
+            Piece currentPiece = board[to.colIndex()][to.rowIndex()];
+            if ((currentPiece.getClass()==Pawn.class && ((Pawn)currentPiece).hasMoved) || (currentPiece.getClass()==King.class && ((King)currentPiece).hasMoved) || (currentPiece.getClass()==Rook.class && ((Rook)currentPiece).getHasMoved())) {
+                move.firstMove=true;
+            }
         }
     }
 
@@ -227,9 +233,6 @@ public class Board{
                 board[to.colIndex()][to.rowIndex()] = new Pawn(currentPlayer.getColor(), to, true);
             }
 
-
-            //TODO check if it was their first move
-
             //normal move
             board[from.colIndex()][from.rowIndex()] = board[to.colIndex()][to.rowIndex()];
             board[from.colIndex()][from.rowIndex()].unmove(from);
@@ -239,6 +242,17 @@ public class Board{
             if (move.tookPiece && !capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
                 board[to.colIndex()][to.rowIndex()] = capturedPieces.get(capturedPieces.size()-1);
                 capturedPieces.remove(capturedPieces.size()-1);
+            }
+
+            //check if the move was the pieces' first move, and if so, fix their hasMoved boolean
+            if (move.firstMove) {
+                if (board[from.colIndex()][from.rowIndex()].getClass() == King.class) {
+                    ((King)board[from.colIndex()][from.rowIndex()]).undoCastle();
+                } else if (board[from.colIndex()][from.rowIndex()].getClass() == Rook.class) {
+                    ((Rook)board[from.colIndex()][from.rowIndex()]).undoCastle();
+                } else {
+                    ((Pawn)board[from.colIndex()][from.rowIndex()]).hasMoved = false;
+                }
             }
             
         }

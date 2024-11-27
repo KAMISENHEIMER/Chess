@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Pawn extends Piece {
 
-    private boolean hasMoved;
+    public boolean hasMoved;
 
     /**
      * Constructs a new Pawn piece
