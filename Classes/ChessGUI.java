@@ -65,14 +65,14 @@ public class ChessGUI {
      * @param fileName      the file path as a string to the desired image
      * @return              the JLabel which is scaled and contains the image
      */
-    public JLabel LoadImage(String fileName){
+    public JLabel LoadImage(String fileName, int scale){
         BufferedImage pieceImage;
         try {
             pieceImage = ImageIO.read(new File(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Image pieceImageScaled = pieceImage.getScaledInstance(pieceArtScale,pieceArtScale,Image.SCALE_DEFAULT);
+        Image pieceImageScaled = pieceImage.getScaledInstance(scale,scale,Image.SCALE_DEFAULT);
         return new JLabel(new ImageIcon(pieceImageScaled));
     }
 
@@ -83,19 +83,19 @@ public class ChessGUI {
      */
     public JLabel PieceToImage(String pieceStr){
         return switch (pieceStr) {
-            case "wP" -> LoadImage("Assets/whitePawn.png");
-            case "wR" -> LoadImage("Assets/whiteRook.png");
-            case "wN" -> LoadImage("Assets/whiteKnight.png");
-            case "wB" -> LoadImage("Assets/whiteBishop.png");
-            case "wQ" -> LoadImage("Assets/whiteQueen.png");
-            case "wK" -> LoadImage("Assets/whiteKing.png");
-            case "bP" -> LoadImage("Assets/blackPawn.png");
-            case "bR" -> LoadImage("Assets/blackRook.png");
-            case "bN" -> LoadImage("Assets/blackKnight.png");
-            case "bB" -> LoadImage("Assets/blackBishop.png");
-            case "bQ" -> LoadImage("Assets/blackQueen.png");
-            case "bK" -> LoadImage("Assets/blackKing.png");
-            default -> LoadImage("Assets/smiley.png");
+            case "wP" -> LoadImage("Assets/whitePawn.png", pieceArtScale);
+            case "wR" -> LoadImage("Assets/whiteRook.png", pieceArtScale);
+            case "wN" -> LoadImage("Assets/whiteKnight.png", pieceArtScale);
+            case "wB" -> LoadImage("Assets/whiteBishop.png", pieceArtScale);
+            case "wQ" -> LoadImage("Assets/whiteQueen.png", pieceArtScale);
+            case "wK" -> LoadImage("Assets/whiteKing.png", pieceArtScale);
+            case "bP" -> LoadImage("Assets/blackPawn.png", pieceArtScale);
+            case "bR" -> LoadImage("Assets/blackRook.png", pieceArtScale);
+            case "bN" -> LoadImage("Assets/blackKnight.png", pieceArtScale);
+            case "bB" -> LoadImage("Assets/blackBishop.png", pieceArtScale);
+            case "bQ" -> LoadImage("Assets/blackQueen.png", pieceArtScale);
+            case "bK" -> LoadImage("Assets/blackKing.png", pieceArtScale);
+            default -> LoadImage("Assets/smiley.png", pieceArtScale);
         };
     }
 
@@ -139,7 +139,7 @@ public class ChessGUI {
                 displaySettingsMenu();
             }
         });
-        JLabel settingsButtonIcon = LoadImage("Assets/settingsMenu.png");
+        JLabel settingsButtonIcon = LoadImage("Assets/settingsMenu.png", 32);
         settingsButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
         settingsButton.add(settingsButtonIcon);
 
@@ -154,7 +154,7 @@ public class ChessGUI {
                 undo();
             }
         });
-        JLabel undoButtonIcon = LoadImage("Assets/undoButton.png");
+        JLabel undoButtonIcon = LoadImage("Assets/undoButton.png", 32);
         undoButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
         undoButton.add(undoButtonIcon);
 
@@ -368,9 +368,9 @@ public class ChessGUI {
             }
             JLabel grayCircle;
             if (board.pieceAt(j,i) == null) {
-                grayCircle = LoadImage("Assets/greyCircle.png");
+                grayCircle = LoadImage("Assets/greyCircle.png", pieceArtScale);
             } else {
-                grayCircle = LoadImage("Assets/greyCircleOutline.png");
+                grayCircle = LoadImage("Assets/greyCircleOutline.png", pieceArtScale);
             }
             grayCircle.setBounds(0,0,pieceScale,pieceScale);
             //grayCircle.setLocationRelativeTo(null);
