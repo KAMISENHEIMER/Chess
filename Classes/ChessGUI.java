@@ -63,6 +63,7 @@ public class ChessGUI {
      * Tries to load a specific image from a file, and puts it into a JLabel.
      *
      * @param fileName      the file path as a string to the desired image
+     * @param scale         how big to make the image after creating it
      * @return              the JLabel which is scaled and contains the image
      */
     public JLabel LoadImage(String fileName, int scale){
@@ -442,12 +443,7 @@ public class ChessGUI {
         settingsMenu.setBounds(settingsMenuPosition,settingsMenuPosition,settingsMenuScale,settingsMenuScale);
         settingsMenu.setVisible(false);
         settingsMenu.setLayout(new BoxLayout(settingsMenu,BoxLayout.PAGE_AXIS));
-
-        //TODO CENTER SETTINGS MENU
-        //settingsMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //settingsMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
         settingsMenu.setBorder(BorderFactory.createEmptyBorder(20,20,50,20));
-
 
         JPanel newGameButton = new JPanel();
         JPanel saveGameButton = new JPanel();
@@ -474,6 +470,12 @@ public class ChessGUI {
                 boardPanel.repaint();
                 displaySettingsMenu();      //get around the menu being hidden behind the new board
                 displaySettingsMenu();
+            }
+        });
+        saveGameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                saveGame(saveInput);
             }
         });
 
@@ -514,6 +516,15 @@ public class ChessGUI {
                 }
             }
         }
+    }
+
+    /**
+     * gets the game's data and pastes it into the text field
+     * @param saveInput     the text field to paste the text into
+     */
+    public void saveGame(JTextField saveInput) {
+        String data = game.getData();
+        saveInput.setText(data);
     }
 
 }

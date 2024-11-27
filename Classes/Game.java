@@ -184,4 +184,10 @@ public class Game{
         //remove the move from the history
         moveHistory.remove(moveHistory.size()-1);
     }
+
+    public String getData() {
+
+        return "test test test";
+    }
+
 }
