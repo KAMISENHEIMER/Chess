@@ -185,7 +185,17 @@ public class Game{
         moveHistory.remove(moveHistory.size()-1);
     }
 
+    /**
+     * gets all data related to the chess game, pieces, and moves
+     * @return      the string made by all the data
+     */
     public String getData() {
+
+        /* --KEY--
+        '!' (exclamation) - separates board, move, and taken pieces
+        '@' (at)          - separates each piece on board, each move, and each piece in taken pieces array
+        ' ' (space)       - separates piece info (type/color,position,hasMoved (if applicable)), move info (toString,tookPiece,firstMove), and taken piece info
+        */
 
         return "test test test";
     }
