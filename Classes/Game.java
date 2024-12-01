@@ -3,6 +3,7 @@ package Classes;
 import Classes.Board;
 import Classes.Move;
 import Classes.Player;
+import Classes.Pieces.King;
 import Utility.Enums.Color;
 import java.util.ArrayList;
 
@@ -99,6 +100,10 @@ public class Game{
 
         //switch color
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
+
+        // TEMP: check for check
+        System.out.println(currentPlayer.getColor() + " in Check?: " + ((King) currentPlayer.getKing()).isInCheck(board));
+
     }
 
     //methods for checking move

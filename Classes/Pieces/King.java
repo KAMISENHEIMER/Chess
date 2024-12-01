@@ -90,4 +90,32 @@ public class King extends Piece {
     public String toString() {
         return (color.equals(Enums.Color.White)?"w":"b") + "K";
     }
+
+    public boolean isInCheck(Board board){
+        // get 5x5 square around king
+        // check possible moves of all enemy pieces in that square
+        // if any of those include where the king is, then the king's in check, return true
+        Location kingLocation = this.getLocation();
+        for (int i = -7; i <= 7; i++) { // column
+            for (int j = -7; j <= 7; j++) { // row
+                Piece scanPiece = board.pieceAt(kingLocation.colIndex()+i, kingLocation.rowIndex()+j);
+                if(scanPiece != null){
+                    if(!scanPiece.getColor().equals(this.getColor())){
+                        ArrayList<Move> moves = scanPiece.getMoves(board);
+                        for(int k = 0; k < moves.size(); ++k){
+                            Move move = moves.get(k);
+                            if(move.getTo().toString().equals(kingLocation.toString())){
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // then, do the same for diagonals and straights (use march?)
+
+
+        return false; // else, if we get to the end and no check, false
+    }
 }
