@@ -13,6 +13,9 @@ public class Move {
     public boolean castleLeft;    //(long side)  only used for castling
     public boolean castleRight;   //(short side) only used for castling
 
+    public boolean tookPiece = false;   //if this move captured another piece, used in undoes
+    public boolean firstMove = false;   //if this move was the pieces first move, used in undoes
+
 
     /**
      * Constructs a new move given a location from and to

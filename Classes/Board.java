@@ -132,7 +132,7 @@ public class Board{
         } else if (move.promoteTo != 0) {       //pawn promotion case
             Location from = move.getFrom();
             Location to = move.getTo();
-            capturePiece(to, player);
+            capturePiece(move, player);
             Piece pawn = board[from.colIndex()][from.rowIndex()];
             Piece promotedPiece;
             switch (move.promoteTo) {
@@ -155,26 +155,33 @@ public class Board{
             board[to.colIndex()][to.rowIndex()] = promotedPiece;
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
-        } else {
+        } else {    //otherwise, simply move piece
             Location from = move.getFrom();
             Location to = move.getTo();
-            //otherwise, simply move piece
-            capturePiece(to, player);
+            capturePiece(move, player);
             board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
+
+            //if the piece moved a piece which hasn't been moved yet, alter the move
+            Piece currentPiece = board[to.colIndex()][to.rowIndex()];
+            if ((currentPiece.getClass()==Pawn.class && ((Pawn)currentPiece).hasMoved) || (currentPiece.getClass()==King.class && ((King)currentPiece).hasMoved) || (currentPiece.getClass()==Rook.class && ((Rook)currentPiece).getHasMoved())) {
+                move.firstMove=true;
+            }
         }
     }
 
     /**
      * helper function to check if there is a piece at a location and update the related piece lists
-     * @param to        the location of the piece potentially being captured
+     * @param move      move of the piece capturing
      * @param player    the player capturing the piece
      */
-    public void capturePiece(Location to, Player player) {
+    public void capturePiece(Move move, Player player) {
+        Location to = move.getTo();
         if (board[to.colIndex()][to.rowIndex()] != null) {
             capturedPieces.add(board[to.colIndex()][to.rowIndex()]);
             //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
+            move.tookPiece = true;
         }
     }
 
@@ -185,4 +192,70 @@ public class Board{
     public Piece[][] getBoard() {
         return board;
     }
+
+    /**
+     * does the opposite of a move, including pawn promotions and castles, with some careful logic for detecting first moves.
+     * @param move              the move to be undone
+     * @param currentPlayer     the player who made the move
+     */
+    public void undo(Move move, Player currentPlayer, Player otherPlayer) {
+        if (move.castleLeft) {
+            int row = (currentPlayer.getColor() == Color.White ? 0 : 7);
+            //move king and rook to new squares
+            board[0][row] = board[3][row];
+            board[4][row] = board[2][row];
+            //delete rook and king from old squares
+            board[3][row] = null;
+            board[2][row] = null;
+            //update pieces' stored location
+            board[0][row].unmove(new Location(0, row));
+            board[4][row].unmove(new Location(4, row));
+            ((Rook)(board[0][row])).undoCastle();
+            ((King)(board[4][row])).undoCastle();
+        } else if (move.castleRight) {
+            int row = (currentPlayer.getColor() == Color.White ? 0 : 7);
+            //move king and rook to new squares
+            board[7][row] = board[5][row];
+            board[4][row] = board[6][row];
+            //delete rook and king from old squares
+            board[5][row] = null;
+            board[6][row] = null;
+            //update pieces' stored location
+            board[7][row].unmove(new Location(7, row));
+            board[4][row].unmove(new Location(4, row));
+            ((Rook)(board[7][row])).undoCastle();
+            ((King)(board[4][row])).undoCastle();
+        } else {
+            Location from = move.getFrom();
+            Location to = move.getTo();
+
+            if (move.promoteTo!=0) {    //pawn promotion, switch the piece back into a pawn and continue
+                board[to.colIndex()][to.rowIndex()] = new Pawn(currentPlayer.getColor(), to, true);
+            }
+
+            //normal move
+            board[from.colIndex()][from.rowIndex()] = board[to.colIndex()][to.rowIndex()];
+            board[from.colIndex()][from.rowIndex()].unmove(from);
+            board[to.colIndex()][to.rowIndex()] = null;
+
+            //check if the move captured another piece, and if so, put it back
+            if (move.tookPiece && !capturedPieces.isEmpty() && capturedPieces.get(capturedPieces.size()-1).getLocation().toString().equals(to.toString())) {    //if it was, add it back to the game and remove it from the list
+                board[to.colIndex()][to.rowIndex()] = capturedPieces.get(capturedPieces.size()-1);
+                capturedPieces.remove(capturedPieces.size()-1);
+            }
+
+            //check if the move was the pieces' first move, and if so, fix their hasMoved boolean
+            if (move.firstMove) {
+                if (board[from.colIndex()][from.rowIndex()].getClass() == King.class) {
+                    ((King)board[from.colIndex()][from.rowIndex()]).undoCastle();
+                } else if (board[from.colIndex()][from.rowIndex()].getClass() == Rook.class) {
+                    ((Rook)board[from.colIndex()][from.rowIndex()]).undoCastle();
+                } else {
+                    ((Pawn)board[from.colIndex()][from.rowIndex()]).hasMoved = false;
+                }
+            }
+            
+        }
+    }
+
 }

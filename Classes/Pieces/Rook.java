@@ -63,6 +63,13 @@ public class Rook extends Piece {
     }
 
     /**
+     * sets has moved to false, used in Undos
+     */
+    public void undoCastle() {
+        hasMoved = false;
+    }
+
+    /**
      * Represents piece as string, for displaying on board
      *
      * @return Rook piece represented as string. Ex) wR for white pawn

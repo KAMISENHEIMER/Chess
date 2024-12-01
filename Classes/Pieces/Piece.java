@@ -58,6 +58,14 @@ public abstract class Piece {
     }
 
     /**
+     * used in undoes, is never overwritten to update hasMoved booleans
+     * @param location the location to move to
+     */
+    public void unmove(Location location) {
+        this.location = location;
+    }
+
+    /**
      * For use for pieces such as rook or bishop, which have valid moves in a straight direction
      * as long as there's not another piece, or the edge of the board.
      * If there is a piece, the movement is valid if it's the opposite color (taking piece), but no further.

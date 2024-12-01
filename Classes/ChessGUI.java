@@ -19,6 +19,14 @@ import java.util.ArrayList;
  */
 public class ChessGUI {
 
+    //variables for sizing
+    int windowSize = 512;       //try to keep to factors of 2, 512 is good
+    int barSize = windowSize/16;
+    int pieceScale = windowSize/8;
+    int pieceArtScale = (int)(pieceScale*.88);
+    int settingsMenuScale = (int)(windowSize*.7);
+    int settingsMenuPosition = (windowSize/2)-(settingsMenuScale/2);
+
     //board colors
     //Color lightColor = new Color(240, 217, 181);
     //Color darkColor = new Color(181, 136, 99);
@@ -30,6 +38,12 @@ public class ChessGUI {
 
     //frame that holds window
     JFrame frame;
+    //content layered pane for board and menus
+    JLayeredPane content;
+    //panel that holds board.
+    JPanel boardPanel;
+    //panel that holds settings menu.
+    JPanel settingsMenu;
 
     //variable to hold whatever piece the player has clicked
     Piece selectedPiece;
@@ -49,16 +63,17 @@ public class ChessGUI {
      * Tries to load a specific image from a file, and puts it into a JLabel.
      *
      * @param fileName      the file path as a string to the desired image
+     * @param scale         how big to make the image after creating it
      * @return              the JLabel which is scaled and contains the image
      */
-    public JLabel LoadImage(String fileName){
+    public JLabel LoadImage(String fileName, int scale){
         BufferedImage pieceImage;
         try {
             pieceImage = ImageIO.read(new File(fileName));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Image pieceImageScaled = pieceImage.getScaledInstance(64,64,Image.SCALE_DEFAULT);
+        Image pieceImageScaled = pieceImage.getScaledInstance(scale,scale,Image.SCALE_DEFAULT);
         return new JLabel(new ImageIcon(pieceImageScaled));
     }
 
@@ -69,19 +84,19 @@ public class ChessGUI {
      */
     public JLabel PieceToImage(String pieceStr){
         return switch (pieceStr) {
-            case "wP" -> LoadImage("Assets/whitePawn.png");
-            case "wR" -> LoadImage("Assets/whiteRook.png");
-            case "wN" -> LoadImage("Assets/whiteKnight.png");
-            case "wB" -> LoadImage("Assets/whiteBishop.png");
-            case "wQ" -> LoadImage("Assets/whiteQueen.png");
-            case "wK" -> LoadImage("Assets/whiteKing.png");
-            case "bP" -> LoadImage("Assets/blackPawn.png");
-            case "bR" -> LoadImage("Assets/blackRook.png");
-            case "bN" -> LoadImage("Assets/blackKnight.png");
-            case "bB" -> LoadImage("Assets/blackBishop.png");
-            case "bQ" -> LoadImage("Assets/blackQueen.png");
-            case "bK" -> LoadImage("Assets/blackKing.png");
-            default -> LoadImage("Assets/smiley.png");
+            case "wP" -> LoadImage("Assets/whitePawn.png", pieceArtScale);
+            case "wR" -> LoadImage("Assets/whiteRook.png", pieceArtScale);
+            case "wN" -> LoadImage("Assets/whiteKnight.png", pieceArtScale);
+            case "wB" -> LoadImage("Assets/whiteBishop.png", pieceArtScale);
+            case "wQ" -> LoadImage("Assets/whiteQueen.png", pieceArtScale);
+            case "wK" -> LoadImage("Assets/whiteKing.png", pieceArtScale);
+            case "bP" -> LoadImage("Assets/blackPawn.png", pieceArtScale);
+            case "bR" -> LoadImage("Assets/blackRook.png", pieceArtScale);
+            case "bN" -> LoadImage("Assets/blackKnight.png", pieceArtScale);
+            case "bB" -> LoadImage("Assets/blackBishop.png", pieceArtScale);
+            case "bQ" -> LoadImage("Assets/blackQueen.png", pieceArtScale);
+            case "bK" -> LoadImage("Assets/blackKing.png", pieceArtScale);
+            default -> LoadImage("Assets/smiley.png", pieceArtScale);
         };
     }
 
@@ -93,15 +108,88 @@ public class ChessGUI {
         frame = new JFrame("Chess Board");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
+        frame.setResizable(false);
+
+        //layered pane to hold board and menus
+        content = new JLayeredPane();
+        content.setPreferredSize(new Dimension(windowSize, windowSize));
 
         //panel that holds board
-        JPanel boardPanel = new JPanel();
+        boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
-        boardPanel.setPreferredSize(new Dimension(600, 600));
+        boardPanel.setPreferredSize(new Dimension(windowSize, windowSize));
+        boardPanel.setBounds(0,0,windowSize,windowSize);
 
+        //player bars (top and bottom)
+        JPanel whiteBar = new JPanel();
+        whiteBar.setPreferredSize(new Dimension(windowSize, barSize));
+        whiteBar.setLayout(new BorderLayout());
+
+        JPanel blackBar = new JPanel();
+        blackBar.setPreferredSize(new Dimension(windowSize, barSize));
+        blackBar.setLayout(new BorderLayout());
+
+        //settings button
+        JPanel settingsButton = new JPanel();
+        settingsButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
+        settingsButton.setBackground(Color.lightGray);
+        blackBar.add(settingsButton, BorderLayout.LINE_END);
+        settingsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                displaySettingsMenu();
+            }
+        });
+        JLabel settingsButtonIcon = LoadImage("Assets/settingsMenu.png", 32);
+        settingsButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
+        settingsButton.add(settingsButtonIcon);
+
+        //undo button
+        JPanel undoButton = new JPanel();
+        undoButton.setPreferredSize(new Dimension((int)(barSize*.88), (int)(barSize*.88)));
+        undoButton.setBackground(Color.lightGray);
+        whiteBar.add(undoButton, BorderLayout.LINE_END);
+        undoButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                undo();
+            }
+        });
+        JLabel undoButtonIcon = LoadImage("Assets/undoButton.png", 32);
+        undoButtonIcon.setPreferredSize(new Dimension((int)(barSize*.75), (int)(barSize*.75)));
+        undoButton.add(undoButtonIcon);
+
+        //settings menu
+        buildSettingsMenu();
+
+        //lists that hold references to panels
         boardGrid = new JLayeredPane[8][8];
-
         movePanels = new ArrayList<>();
+
+        //creates game, board, pieces, and click events
+        NewGame();
+
+        //put board and menu onto the content layered pane
+        content.add(settingsMenu);      //puts the settings menu into board panel
+        content.add(boardPanel);      //puts board inside content
+
+        //loads all parts into frame
+        frame.add(blackBar, BorderLayout.PAGE_START);
+        frame.add(whiteBar, BorderLayout.PAGE_END);
+        frame.add(content, BorderLayout.CENTER);      //puts content (board and menus) inside window
+        frame.pack();       //displays panel inside frame
+        frame.setLocationRelativeTo(null);  //puts window in the middle of screen
+
+        frame.setVisible(true);     //display the whole frame
+    }
+
+    /**
+     * Creates a new chess game, displays it onto the board, and initializes pieces and click events
+     */
+    public void NewGame() {
+
+        //clear out old grid (if there is any)
+        boardPanel.removeAll();
 
         //make a chess game
         game = new Game();
@@ -122,7 +210,7 @@ public class ChessGUI {
                 Piece piece = board.pieceAt(j,i);
                 if (piece != null) {
                     JLabel picLabel = PieceToImage(piece.toString());
-                    picLabel.setBounds(0,0,75,75);
+                    picLabel.setBounds(0,0,pieceScale,pieceScale);
                     backgroundPanel.add(picLabel);
 
                 }
@@ -141,12 +229,6 @@ public class ChessGUI {
                 boardPanel.add(backgroundPanel);
             }
         }
-
-        frame.add(boardPanel);      //puts board inside window
-        frame.pack();       //displays panel inside frame
-        frame.setLocationRelativeTo(null);  //puts window in the middle of screen
-
-        frame.setVisible(true);     //display the whole frame
     }
 
     /**
@@ -179,7 +261,6 @@ public class ChessGUI {
             //display all moves the piece can make
             DisplayAvailableMoves(selectedPiece);
 
-            System.out.println("PIECE SELECTED");   //TESTING
         } else if (selectedPiece != null && notSamePiece && legalMove) {   //a piece is already selected, and the piece isnt itself
             //all of this moves a piece
 
@@ -199,7 +280,7 @@ public class ChessGUI {
 
             //add image to new spot
             JLabel picLabel = PieceToImage(board.pieceAt(fixedJ,fixedI).toString());   //have to get the piece at the board location because of pawns upgrading
-            picLabel.setBounds(0,0,75,75);
+            picLabel.setBounds(0,0,pieceScale,pieceScale);
             backgroundPanel.add(picLabel);
 
             //remove image from the previous spot
@@ -210,8 +291,6 @@ public class ChessGUI {
             selectedPanel.repaint();
             backgroundPanel.revalidate();
             backgroundPanel.repaint();
-
-            System.out.println(move.castleLeft);    //TESTING
 
             //repaint the rook's squares if the move was a castle
             int row = (game.getCurrentPlayer().getColor() == Enums.Color.White ? 7 : 0);
@@ -225,7 +304,6 @@ public class ChessGUI {
                 boardGrid[0][row].remove(boardGrid[0][row].getComponents()[0]);
                 boardGrid[0][row].revalidate();
                 boardGrid[0][row].repaint();    //repaint rook's first square
-                System.out.println("repainted: 0 "+row);
             } else if (move.castleRight) {
                 JLabel rookLabel = PieceToImage(board.pieceAt(5,row).toString());
                 rookLabel.setBounds(0,0,75,75);
@@ -242,7 +320,6 @@ public class ChessGUI {
             selectedPiece = null;
             selectedPanel = null;
 
-            System.out.println("PIECE MOVED");   //TESTING
             CheckForKingCapture();
         } else {    //every other click event, remove possible moves and unhighlight panel
             if (selectedPanel != null) {
@@ -260,12 +337,10 @@ public class ChessGUI {
      */
     public void CheckForKingCapture() {
         if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().getLocation())) {
-            System.out.println("WHITE KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
             System.exit(0);
         }
         if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().getLocation())) {
-            System.out.println("BLACK KING TAKEN, DISPLAY POPUP");
             JOptionPane.showMessageDialog(frame, "Game over, White wins!");
             System.exit(0);
         }
@@ -294,11 +369,13 @@ public class ChessGUI {
             }
             JLabel grayCircle;
             if (board.pieceAt(j,i) == null) {
-                grayCircle = LoadImage("Assets/greyCircle.png");
+                grayCircle = LoadImage("Assets/greyCircle.png", pieceArtScale);
             } else {
-                grayCircle = LoadImage("Assets/greyCircleOutline.png");
+                grayCircle = LoadImage("Assets/greyCircleOutline.png", pieceArtScale);
             }
-            grayCircle.setBounds(0,0,75,75);
+            grayCircle.setBounds(0,0,pieceScale,pieceScale);
+            //grayCircle.setLocationRelativeTo(null);
+
             boardGrid[j][i].add(grayCircle);
 
             //redraw that square to reflect addition
@@ -347,6 +424,107 @@ public class ChessGUI {
             }   //TODO bring up a menu for pawn promotions
         }
         return move;
+    }
+
+    /**
+     * toggles where the settings menu is displayed or not
+     */
+    public void displaySettingsMenu() {
+        settingsMenu.setVisible(!settingsMenu.isVisible());
+    }
+
+    /**
+     * builds all buttons that sit inside the settings menu
+     */
+    public void buildSettingsMenu() {
+        settingsMenu = new JPanel();
+        settingsMenu.setBackground(Color.lightGray);
+        settingsMenu.setPreferredSize(new Dimension(settingsMenuScale, settingsMenuScale));
+        settingsMenu.setBounds(settingsMenuPosition,settingsMenuPosition,settingsMenuScale,settingsMenuScale);
+        settingsMenu.setVisible(false);
+        settingsMenu.setLayout(new BoxLayout(settingsMenu,BoxLayout.PAGE_AXIS));
+        settingsMenu.setBorder(BorderFactory.createEmptyBorder(20,20,50,20));
+
+        JPanel newGameButton = new JPanel();
+        JPanel saveGameButton = new JPanel();
+        JPanel loadGameButton = new JPanel();
+
+        JLabel newGameText = new JLabel("New Game");
+        JLabel saveGameText = new JLabel("Save Game");
+        JLabel loadGameText = new JLabel("Load Game");
+        JTextField saveInput = new JTextField();
+
+        newGameButton.add(newGameText);
+        saveGameButton.add(saveGameText);
+        loadGameButton.add(loadGameText);
+
+        newGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        saveGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loadGameButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        newGameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                NewGame();
+                boardPanel.revalidate();    //redraw the new board
+                boardPanel.repaint();
+                displaySettingsMenu();      //get around the menu being hidden behind the new board
+                displaySettingsMenu();
+            }
+        });
+        saveGameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                saveGame(saveInput);
+            }
+        });
+
+
+        settingsMenu.add(newGameButton);
+        settingsMenu.add(saveGameButton);
+        settingsMenu.add(loadGameButton);
+        settingsMenu.add(saveInput);
+
+    }
+
+    /**
+     * calls a game undo, and updates the GUI
+     */
+    public void undo() {
+        game.undo();
+        //TODO find the specific pieces and undo them
+
+        //delete possible move drawings to prevent issues;
+        RemoveAvailableMoves();
+
+        //redraws entire board, this should be changed later for something more specific to the undone move
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (boardGrid[j][i].getComponents().length >= 1) {    //remove every image, doing this because of dang piece taking in undos
+                    boardGrid[j][i].remove(boardGrid[j][i].getComponents()[0]);
+                    boardGrid[j][i].revalidate();
+                    boardGrid[j][i].repaint();
+                }
+                /* if (boardGrid[j][i].getComponents().length >= 1 && board.pieceAt(j,i) == null) {    //remove image if there is no piece
+                    boardGrid[j][i].remove(boardGrid[j][i].getComponents()[0]);
+                    boardGrid[j][i].revalidate();
+                    boardGrid[j][i].repaint();
+                } else */ if (boardGrid[j][i].getComponents().length == 0 && board.pieceAt(j,i) != null) {     //add image if there is a piece
+                    JLabel picLabel = PieceToImage(board.pieceAt(j,i).toString());   //have to get the piece at the board location because of pawns upgrading
+                    picLabel.setBounds(0,0,pieceScale,pieceScale);
+                    boardGrid[j][i].add(picLabel);
+                }
+            }
+        }
+    }
+
+    /**
+     * gets the game's data and pastes it into the text field
+     * @param saveInput     the text field to paste the text into
+     */
+    public void saveGame(JTextField saveInput) {
+        String data = game.getData();
+        saveInput.setText(data);
     }
 
 }

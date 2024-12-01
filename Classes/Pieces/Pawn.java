@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class Pawn extends Piece {
 
-    private boolean hasMoved;
+    public boolean hasMoved;
 
     /**
      * Constructs a new Pawn piece
@@ -23,6 +23,18 @@ public class Pawn extends Piece {
     public Pawn(Color color, Location location) {
         super(color, location);
         hasMoved = false;
+    }
+
+    /**
+     * Constructs a new Pawn piece, and specify if it has moved or not, used in undoes.
+     *
+     * @param color Color of piece
+     * @param location Location piece spawns in
+     * @param hasMoved whether the piece has already moved or not
+     */
+    public Pawn(Color color, Location location, boolean hasMoved) {
+        super(color, location);
+        this.hasMoved = hasMoved;
     }
 
     /**
