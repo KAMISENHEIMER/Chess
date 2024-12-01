@@ -43,10 +43,10 @@ public class Player{
      * @param board     the current state of the board
      * @return          the all the possible moves a player can make
      */
-    public ArrayList<Move> getMoves(Board board) {
+    public ArrayList<Move> getMoves(Game game) {
         ArrayList<Move> moves = new ArrayList<Move>();
         for (Piece piece: pieces) {
-            moves.addAll(piece.getMoves(board));
+            moves.addAll(piece.getMoves(game));
         }
         return moves;
     }

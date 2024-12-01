@@ -181,6 +181,9 @@ public class Board{
         if (board[to.colIndex()][to.rowIndex()] != null) {
             capturedPieces.add(board[to.colIndex()][to.rowIndex()]);
             //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);     //TODO should remove from the opposite players list
+
+            //board[to.colIndex()][to.rowIndex()].getColor()==Color.White?
+            //player.getPieces().remove(board[to.colIndex()][to.rowIndex()]);
             move.tookPiece = true;
         }
     }

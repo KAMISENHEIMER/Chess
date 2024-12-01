@@ -1,6 +1,7 @@
 package Classes.Pieces;
 
 import Classes.Board;
+import Classes.Game;
 import Classes.Location;
 import Classes.Move;
 import Utility.Enums;
@@ -26,11 +27,12 @@ public class King extends Piece {
 
     /**
      * Gets all possible moves for king piece
-     * @param board reference to the game board
+     * @param game reference to the game
      * @return moves ArrayList of all valid moves for piece
      */
     @Override
-    public ArrayList<Move> getMoves(Board board) {
+    public ArrayList<Move> getMoves(Game game) {
+        Board board = game.getBoard();
 
         ArrayList<Move> moves = new ArrayList<Move>();
 
@@ -91,17 +93,17 @@ public class King extends Piece {
         return (color.equals(Enums.Color.White)?"w":"b") + "K";
     }
 
-    public boolean isInCheck(Board board){
+    public boolean isInCheck(Game game){
         // get 5x5 square around king
         // check possible moves of all enemy pieces in that square
         // if any of those include where the king is, then the king's in check, return true
         Location kingLocation = this.getLocation();
         for (int i = -7; i <= 7; i++) { // column
             for (int j = -7; j <= 7; j++) { // row
-                Piece scanPiece = board.pieceAt(kingLocation.colIndex()+i, kingLocation.rowIndex()+j);
+                Piece scanPiece = game.getBoard().pieceAt(kingLocation.colIndex()+i, kingLocation.rowIndex()+j);
                 if(scanPiece != null){
                     if(!scanPiece.getColor().equals(this.getColor())){
-                        ArrayList<Move> moves = scanPiece.getMoves(board);
+                        ArrayList<Move> moves = scanPiece.getMoves(game);
                         for(int k = 0; k < moves.size(); ++k){
                             Move move = moves.get(k);
                             if(move.getTo().toString().equals(kingLocation.toString())){

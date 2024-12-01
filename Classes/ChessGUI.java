@@ -247,7 +247,7 @@ public class ChessGUI {
         if (selectedPiece != null) {
             move = new Move(selectedPiece.getLocation(), new Location(fixedJ, fixedI));
             move = correctMove(move);     //fixes move if it is a pawn promotion or castle
-            legalMove = game.checkLegalMove(move);
+            legalMove = game.checkLegalMove(move);      //makes sure the move is legal and not putting the player in check
         }
         boolean notSamePiece = (selectedPiece != board.pieceAt(fixedJ, fixedI));
 
@@ -352,7 +352,7 @@ public class ChessGUI {
      * @param piece     the piece to get all the moves from
      */
     public void DisplayAvailableMoves(Piece piece) {
-        ArrayList<Move> moves = piece.getMoves(board);
+        ArrayList<Move> moves = piece.getSafeMoves(game);
         for (Move move : moves) {
             //create a circle for all your moves, solid if onto an empty square, outline if onto a piece
             int j;

@@ -102,7 +102,7 @@ public class Game{
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
 
         // TEMP: check for check
-        System.out.println(currentPlayer.getColor() + " in Check?: " + ((King) currentPlayer.getKing()).isInCheck(board));
+        //System.out.println(currentPlayer.getColor() + " in Check?: " + ((King) currentPlayer.getKing()).isInCheck(this));
 
     }
 
@@ -132,7 +132,7 @@ public class Game{
     public boolean checkLegalMove(Move move){
         //checks for castling
         if ((move.castleLeft || move.castleRight)) {
-            return currentPlayer.getKing().getMoves(board).contains(move);
+            return currentPlayer.getKing().getSafeMoves(this).contains(move);
         }
         //checks if there is a piece to move
         if(board.pieceAt(move.getFrom())==null){
@@ -143,7 +143,7 @@ public class Game{
             return false;
         }
         //returns whether that move is in the moves list of that piece
-        return board.pieceAt(move.getFrom()).getMoves(board).contains(move);
+        return board.pieceAt(move.getFrom()).getSafeMoves(this).contains(move);
     }
 
     /**

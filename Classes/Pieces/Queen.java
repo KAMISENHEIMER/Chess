@@ -1,6 +1,7 @@
 package Classes.Pieces;
 
 import Classes.Board;
+import Classes.Game;
 import Classes.Location;
 import Classes.Move;
 import Utility.Enums;
@@ -25,11 +26,13 @@ public class Queen extends Piece {
     /**
      * Gets a list of all possible moves
      *
-     * @param board Reference to game board
+     * @param game Reference to game
      * @return moves ArrayList of all valid moves for piece
      */
     @Override
-    public ArrayList<Move> getMoves(Board board) {
+    public ArrayList<Move> getMoves(Game game) {
+        Board board = game.getBoard();
+
         ArrayList<Move> moves = new ArrayList<Move>();
 
         // horizontal/vertical moves

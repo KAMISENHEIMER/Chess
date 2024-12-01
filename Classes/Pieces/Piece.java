@@ -1,8 +1,6 @@
 package Classes.Pieces;
 
-import Classes.Board;
-import Classes.Location;
-import Classes.Move;
+import Classes.*;
 import Utility.Enums.*;
 
 import java.util.ArrayList;
@@ -29,10 +27,10 @@ public abstract class Piece {
     /**
      * Gets a list of all valid moves for piece
      *
-     * @param board Current game board
+     * @param game Current game
      * @return ArrayList of valid moves
      */
-    public abstract ArrayList<Move> getMoves(Board board);
+    public abstract ArrayList<Move> getMoves(Game game);
 
     /**
      * Getter for piece color
@@ -133,4 +131,29 @@ public abstract class Piece {
             return true;
         }
     }
+
+    public void checkMovesForChecks(ArrayList<Move> moves, Game game) {
+        for (int i = 0; i < moves.size(); i++) {
+            game.playGUI(moves.get(i));
+            Player oppositePlayer = game.getCurrentPlayer().getColor()==Color.White?game.getPlayer(false):game.getPlayer(true);
+            if (((King)oppositePlayer.getKing()).isInCheck(game)) {     //switch player
+                moves.remove(moves.get(i));
+                i--;
+            }
+            game.undo();
+        }
+    }
+
+    /**
+     * returns all available moves the piece can make without putting the king into check
+     * @param game  the game the players are playing
+     * @return      the updated move array with all the moves a piece can make without putting their king into check
+     */
+    public ArrayList<Move> getSafeMoves(Game game) {
+        ArrayList<Move> moves = getMoves(game);
+        checkMovesForChecks(moves, game);
+        return moves;
+    }
+
+
 }
