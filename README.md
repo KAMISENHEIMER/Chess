@@ -9,7 +9,17 @@ Team 1: DROP_TABLE
 Class:
 Object Oriented Programming - CS 3354.003\
 Fall 2024\
-at Texas State University
+at Texas State University\
+
+HOW TO COMPILE/RUN:\
+> Navigate to the repository\
+> Run "javac Main.java"\
+> Run "java Main.java"\
+
+Features:
+- Full, working chess functionality with click controls
+- "Undo" feature to rewind moves
+- New game, save game, and load game
 
 
 ![chessSS1](https://git.txstate.edu/rcx4/ChessApp-Team1/assets/4239/b4a766b0-9f96-4bd2-818a-de790e53af78)
