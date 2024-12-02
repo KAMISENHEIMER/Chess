@@ -46,7 +46,7 @@ public class Player{
     public ArrayList<Move> getMoves(Game game) {
         ArrayList<Move> moves = new ArrayList<Move>();
         for (Piece piece: pieces) {
-            moves.addAll(piece.getMoves(game));
+            moves.addAll(piece.getSafeMoves(game));
         }
         return moves;
     }

@@ -320,7 +320,7 @@ public class ChessGUI {
             selectedPiece = null;
             selectedPanel = null;
 
-            CheckForKingCapture();
+            CheckForMate();
         } else {    //every other click event, remove possible moves and unhighlight panel
             if (selectedPanel != null) {
                 selectedPanel.setBackground(selectedPanel.getBackground() == lightColorHighlight ? lightColor : darkColor);
@@ -335,15 +335,12 @@ public class ChessGUI {
     }
 
     /**
-     * Checks both kings' locations to see if either is captured, and if so displays a message and ends the game.
+     * Checks the current player to see if they are in check and have no moves (checkmate).
      */
-    public void CheckForKingCapture() {
-        if (game.getPlayer(true).getKing() != game.getBoard().pieceAt(game.getPlayer(true).getKing().getLocation())) {
-            JOptionPane.showMessageDialog(frame, "Game over, Black wins!");
-            System.exit(0);
-        }
-        if (game.getPlayer(false).getKing() != game.getBoard().pieceAt(game.getPlayer(false).getKing().getLocation())) {
-            JOptionPane.showMessageDialog(frame, "Game over, White wins!");
+    public void CheckForMate() {
+        
+        if (((King)game.getCurrentPlayer().getKing()).isInCheck(game) && game.getCurrentPlayer().getMoves(game).isEmpty()) {
+            JOptionPane.showMessageDialog(frame, "Game over, "+ (game.getCurrentPlayer().getColor()==Enums.Color.White?"Black":"White") +" wins!");
             System.exit(0);
         }
 
