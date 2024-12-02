@@ -23,6 +23,10 @@ public class Knight extends Piece {
         super(color, location);
     }
 
+    public Knight(String pieceDatum, String pieceDatum1, String pieceDatum2) {
+        super(pieceDatum, pieceDatum1, pieceDatum2);
+    }
+
     /**
      * Gets a list of all possible moves
      *

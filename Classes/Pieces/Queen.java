@@ -23,6 +23,10 @@ public class Queen extends Piece {
         super(color, location);
     }
 
+    public Queen(String pieceDatum, String pieceDatum1, String pieceDatum2) {
+        super(pieceDatum, pieceDatum1, pieceDatum2);
+    }
+
     /**
      * Gets a list of all possible moves
      *

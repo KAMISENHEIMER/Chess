@@ -2,6 +2,7 @@ package Classes;
 
 import Classes.Board;
 import Classes.Move;
+import Classes.Pieces.Piece;
 import Classes.Player;
 import Classes.Pieces.King;
 import Utility.Enums.Color;
@@ -200,10 +201,74 @@ public class Game{
         /* --KEY--
         '!' (exclamation) - separates board, move, and taken pieces
         '@' (at)          - separates each piece on board, each move, and each piece in taken pieces array
-        ' ' (space)       - separates piece info (type/color,position,hasMoved (if applicable)), move info (toString,tookPiece,firstMove), and taken piece info
+        '#' (hashtag)     - separates each row on the board
+        ' ' (space)       - separates piece info (type/color,position,hasMoved (if applicable)), and taken piece info
+        '/' (slash)       - separates move info (toString,tookPiece,firstMove)
         */
 
-        return "test test test";
+        StringBuilder returnString = new StringBuilder();
+
+        //board
+        returnString.append(board.getData());
+        returnString.append("!");
+
+        //move history
+        for (Move move: moveHistory) {
+            returnString.append(move.getData());
+            returnString.append("@");
+        }
+        returnString.append("!");
+
+        //captured pieces
+        for (Piece piece: board.getCapturedPieces()) {
+            returnString.append(piece.getData());
+            returnString.append("@");
+        }
+
+        return returnString.toString();
+    }
+
+    /**
+     * load data constructor
+     */
+    public Game(String data) {
+        String[] dataPieces = new String[]{"","",""};
+        String[] dataPiecesChopped = data.split("!");
+        if (dataPiecesChopped.length==2) {
+            dataPieces[0] = dataPiecesChopped[0];
+            dataPieces[1] = dataPiecesChopped[1];
+        }
+        if (dataPiecesChopped.length==1) {
+            dataPieces[0] = dataPiecesChopped[0];
+        }
+
+        //board
+        board = new Board(dataPieces[0],dataPieces[2]);
+
+        //moves
+        moveHistory = new ArrayList<>();
+        String[] moveStrings = dataPieces[1].split("@");
+        if (!moveStrings[0].isEmpty()) {
+            for (int i = 0; i < moveStrings.length; i++) {
+                String[] moveStringData = moveStrings[i].split("/");
+                moveHistory.add(new Move(moveStringData[0], moveStringData[1], moveStringData[2]));
+            }
+        }
+
+        this.white = new Player(Color.White);
+        this.black = new Player(Color.Black);
+        this.currentPlayer = moveHistory.size()%2==0?white:black;
+
+        //search for king
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (board.pieceAt(j,i) !=null && board.pieceAt(j,i).getClass().equals(King.class)) {
+                    (board.pieceAt(j,i).getColor()==Color.White?white:black).setKing(board.pieceAt(j,i));
+                }
+            }
+        }
+
+
     }
 
 }

@@ -40,7 +40,7 @@ public class Player{
 
     /**
      * gets all possible pieces a player can make, if this is 0, then a player is in stalemate
-     * @param board     the current state of the board
+     * @param game     the current state of the board
      * @return          the all the possible moves a player can make
      */
     public ArrayList<Move> getMoves(Game game) {
@@ -76,7 +76,7 @@ public class Player{
      * @param tryStr    the attempted move as a string, ex: "A1 B2"
      * @return          the move as a move object, or null if that is not correct notation
      */
-    public Move makeMove(String tryStr){
+    public static Move makeMove(String tryStr){
 
         //castling
         if(tryStr.equals("O-O") || tryStr.equals("O-O-O")){

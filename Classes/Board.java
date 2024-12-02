@@ -262,4 +262,86 @@ public class Board{
         }
     }
 
+    /**
+     * returns the chess board as a string (for saving and loading)
+     * @return  the string made by all the pieces on the board
+     */
+    public String getData() {
+        StringBuilder returnString = new StringBuilder();
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (pieceAt(j,i) != null) {
+                    returnString.append(pieceAt(j, i).getData());
+                }
+                returnString.append("@");
+            }
+            returnString.append("#");
+        }
+
+        return returnString.toString();
+    }
+
+    /**
+     * load data constructor
+     */
+    public Board(String board, String capturedPieces) {
+        this.board = new Piece[8][8];
+        String[] line = board.split("#");
+        for (int i = 0; i < 8; i++) {
+            System.out.println(line[i]); //TESTING
+            System.out.println("LINE"); //TESTING
+            String[] pieces = line[i].split("@", -1);
+            for (int j = 0; j < 8; j++) {
+                String[] pieceData = pieces[j].split(" ");
+                switch (pieceData[0]) {
+                    case "P":
+                        this.board[j][i] = new Pawn(pieceData[1],pieceData[2],pieceData[3],pieceData[4]);
+                        break;
+                    case "K":
+                        this.board[j][i] = new King(pieceData[1],pieceData[2],pieceData[3],pieceData[4]);
+                        break;
+                    case "Q":
+                        this.board[j][i] = new Queen(pieceData[1],pieceData[2],pieceData[3]);
+                        break;
+                    case "R":
+                        this.board[j][i] = new Rook(pieceData[1],pieceData[2],pieceData[3],pieceData[4]);
+                        break;
+                    case "B":
+                        this.board[j][i] = new Bishop(pieceData[1],pieceData[2],pieceData[3]);
+                        break;
+                    case "N":
+                        this.board[j][i] = new Knight(pieceData[1],pieceData[2],pieceData[3]);
+                        break;
+                }
+            }
+        }
+        this.capturedPieces = new ArrayList<Piece>();
+        //captured pieces
+        String[] capturedPiecesData = capturedPieces.split("@");
+        for (int i = 0; i < capturedPiecesData.length; i++) {
+            String[] pieceData = capturedPiecesData[i].split(" ");
+            switch (pieceData[0]) {
+                case "P":
+                    this.capturedPieces.add(new Pawn(pieceData[1],pieceData[2],pieceData[3],pieceData[4]));
+                    break;
+                case "K":
+                    this.capturedPieces.add(new King(pieceData[1],pieceData[2],pieceData[3],pieceData[4]));
+                    break;
+                case "Q":
+                    this.capturedPieces.add(new Queen(pieceData[1],pieceData[2],pieceData[3]));
+                    break;
+                case "R":
+                    this.capturedPieces.add(new Rook(pieceData[1],pieceData[2],pieceData[3],pieceData[4]));
+                    break;
+                case "B":
+                    this.capturedPieces.add(new Bishop(pieceData[1],pieceData[2],pieceData[3]));
+                    break;
+                case "N":
+                    this.capturedPieces.add(new Knight(pieceData[1],pieceData[2],pieceData[3]));
+                    break;
+            }
+        }
+    }
+
 }

@@ -338,7 +338,7 @@ public class ChessGUI {
      * Checks the current player to see if they are in check and have no moves (checkmate).
      */
     public void CheckForMate() {
-        
+
         if (((King)game.getCurrentPlayer().getKing()).isInCheck(game) && game.getCurrentPlayer().getMoves(game).isEmpty()) {
             JOptionPane.showMessageDialog(frame, "Game over, "+ (game.getCurrentPlayer().getColor()==Enums.Color.White?"Black":"White") +" wins!");
             System.exit(0);
@@ -479,7 +479,16 @@ public class ChessGUI {
                 saveGame(saveInput);
             }
         });
-
+        loadGameButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                loadGame(saveInput);
+                boardPanel.revalidate();    //redraw the new board
+                boardPanel.repaint();
+                displaySettingsMenu();      //get around the menu being hidden behind the new board
+                displaySettingsMenu();
+            }
+        });
 
         settingsMenu.add(newGameButton);
         settingsMenu.add(saveGameButton);
@@ -526,6 +535,50 @@ public class ChessGUI {
     public void saveGame(JTextField saveInput) {
         String data = game.getData();
         saveInput.setText(data);
+    }
+
+    public void loadGame(JTextField saveInput) {
+        game = new Game(saveInput.getText());
+
+        //clear out old grid (if there is any)
+        boardPanel.removeAll();
+
+        board = game.getBoard();
+
+        //loop through the entire board to create the background and pieces
+        for (int i = 7; i >= 0; i--) {
+            for (int j = 0; j < 8; j++) {
+                //panel to hold background color
+                JLayeredPane backgroundPanel = new JLayeredPane();
+                backgroundPanel.setOpaque(true);
+                //backgroundPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));    //border to show edges
+
+                //alternate background colors
+                backgroundPanel.setBackground((i + j) % 2 == 1?lightColor:darkColor);
+
+                //if there is a piece, assign an image to that panel
+                Piece piece = board.pieceAt(j,i);
+                if (piece != null) {
+                    JLabel picLabel = PieceToImage(piece.toString());
+                    picLabel.setBounds(0,0,pieceScale,pieceScale);
+                    backgroundPanel.add(picLabel);
+
+                }
+
+                int fixedI = i;
+                int fixedJ = j;
+                //turn each panel into a 'button'
+                backgroundPanel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        clickHandling(fixedI, fixedJ, backgroundPanel);
+                    }
+                });
+
+                boardGrid[j][i] = backgroundPanel;
+                boardPanel.add(backgroundPanel);
+            }
+        }
     }
 
 }

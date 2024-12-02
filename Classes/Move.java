@@ -114,6 +114,35 @@ public class Move {
         } else {
             return from+" "+to;
         }
-
     }
+
+    /**
+     * turns the move into a data string for saving and loading
+     * @return      all the variables in the move in a single string
+     */
+    public String getData() {
+        StringBuilder returnString = new StringBuilder();
+        returnString.append(toString());
+        returnString.append("/");
+        returnString.append(tookPiece?"1":"0");
+        returnString.append("/");
+        returnString.append(firstMove?"1":"0");
+
+        return returnString.toString();
+    }
+
+    /**
+     * load data constructor
+     */
+    public Move(String move, String tookPiece, String firstMove) {
+        Move newMove = Player.makeMove(move);
+        from = newMove.from;
+        to = newMove.to;
+        promoteTo = newMove.promoteTo;
+        castleLeft = newMove.castleLeft;
+        castleRight = newMove.castleRight;
+        this.tookPiece = tookPiece.equals("1");
+        this.firstMove = firstMove.equals("1");
+    }
+
 }
