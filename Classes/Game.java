@@ -232,15 +232,7 @@ public class Game{
      * load data constructor
      */
     public Game(String data) {
-        String[] dataPieces = new String[]{"","",""};
-        String[] dataPiecesChopped = data.split("!");
-        if (dataPiecesChopped.length==2) {
-            dataPieces[0] = dataPiecesChopped[0];
-            dataPieces[1] = dataPiecesChopped[1];
-        }
-        if (dataPiecesChopped.length==1) {
-            dataPieces[0] = dataPiecesChopped[0];
-        }
+        String[] dataPieces = data.split("!", -1);
 
         //board
         board = new Board(dataPieces[0],dataPieces[2]);

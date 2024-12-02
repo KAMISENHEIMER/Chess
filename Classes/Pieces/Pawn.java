@@ -41,6 +41,7 @@ public class Pawn extends Piece {
     public Pawn(String pieceDatum, String pieceDatum1, String pieceDatum2, String pieceDatum3) {
         super(pieceDatum, pieceDatum1, pieceDatum2);
         hasMoved = pieceDatum3.equals("1");
+        System.out.println("LOADED PAWN, HASMOVED: " + hasMoved); //TESTING
     }
 
     /**

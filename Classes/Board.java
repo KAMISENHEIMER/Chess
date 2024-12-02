@@ -316,8 +316,9 @@ public class Board{
                 }
             }
         }
-        this.capturedPieces = new ArrayList<Piece>();
+
         //captured pieces
+        this.capturedPieces = new ArrayList<Piece>();
         String[] capturedPiecesData = capturedPieces.split("@");
         for (int i = 0; i < capturedPiecesData.length; i++) {
             String[] pieceData = capturedPiecesData[i].split(" ");

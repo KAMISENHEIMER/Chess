@@ -163,7 +163,6 @@ public abstract class Piece {
         returnString.append(location.colIndex());
         returnString.append(" ");
         returnString.append(location.rowIndex());
-        returnString.append(" ");
 
         return returnString.toString();
     }
