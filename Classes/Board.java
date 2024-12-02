@@ -158,16 +158,17 @@ public class Board{
         } else {    //otherwise, simply move piece
             Location from = move.getFrom();
             Location to = move.getTo();
+
+            //if the piece moved a piece which hasn't been moved yet, alter the move
+            Piece currentPiece = board[from.colIndex()][from.rowIndex()];
+            if ((currentPiece.getClass()==Pawn.class && !((Pawn)currentPiece).hasMoved) || (currentPiece.getClass()==King.class && !((King)currentPiece).hasMoved) || (currentPiece.getClass()==Rook.class && !((Rook)currentPiece).getHasMoved())) {
+                move.firstMove=true;
+            }
+
             capturePiece(move, player);
             board[to.colIndex()][to.rowIndex()] = board[from.colIndex()][from.rowIndex()];
             board[to.colIndex()][to.rowIndex()].move(to);
             board[from.colIndex()][from.rowIndex()] = null;
-
-            //if the piece moved a piece which hasn't been moved yet, alter the move
-            Piece currentPiece = board[to.colIndex()][to.rowIndex()];
-            if ((currentPiece.getClass()==Pawn.class && ((Pawn)currentPiece).hasMoved) || (currentPiece.getClass()==King.class && ((King)currentPiece).hasMoved) || (currentPiece.getClass()==Rook.class && ((Rook)currentPiece).getHasMoved())) {
-                move.firstMove=true;
-            }
         }
     }
 

@@ -74,6 +74,7 @@ public class King extends Piece {
     public void move(Location location) {
         this.location = location;
         hasMoved = true;
+        System.out.println("KING MOVED");   //TESTING
     }
 
     /**
@@ -106,7 +107,7 @@ public class King extends Piece {
                         ArrayList<Move> moves = scanPiece.getMoves(game);
                         for(int k = 0; k < moves.size(); ++k){
                             Move move = moves.get(k);
-                            if(move.getTo().toString().equals(kingLocation.toString())){
+                            if(move.getTo()!=null && move.getTo().toString().equals(kingLocation.toString())){
                                 return true;
                             }
                         }

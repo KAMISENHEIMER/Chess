@@ -98,12 +98,13 @@ public class Game{
         //add the move into the move history
         moveHistory.add(move);
 
+        System.out.println(currentPlayer.getColor()+ " king has moved: "+((King)currentPlayer.getKing()).hasMoved);
+
         //switch color
         currentPlayer = currentPlayer.getColor()==Color.White?black:white;
 
         // TEMP: check for check
         //System.out.println(currentPlayer.getColor() + " in Check?: " + ((King) currentPlayer.getKing()).isInCheck(this));
-
     }
 
     //methods for checking move

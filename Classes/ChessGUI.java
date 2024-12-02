@@ -329,6 +329,8 @@ public class ChessGUI {
 
             selectedPiece = null;
             selectedPanel = null;
+
+            System.out.println("NOT ALLOWING MOVE: " + move);   //TESTING
         }
     }
 
@@ -410,11 +412,13 @@ public class ChessGUI {
      */
     public Move correctMove(Move move) {
         //alter move if necessary (castle or pawn promotion)
-        if (game.getBoard().pieceAt(move.getFrom()) == game.getCurrentPlayer().getKing() && !((King)game.getCurrentPlayer().getKing()).hasMoved) {
+        int row = (game.getCurrentPlayer().getColor() == Enums.Color.White ? 0 : 7);
+        if ((game.getBoard().pieceAt(move.getFrom()) == game.getCurrentPlayer().getKing()) && !((King)game.getCurrentPlayer().getKing()).hasMoved && move.getTo().rowIndex() == row) {
             if (move.getTo().colIndex() == 2) {     //leftside castle
                 move = new Move("O-O-O");
             } else if (move.getTo().colIndex() == 6) {  //rightside castle
                 move = new Move("O-O");
+                System.out.println(game.getCurrentPlayer().getColor() + " KING HAS MOVED: "+((King)game.getCurrentPlayer().getKing()).hasMoved);    //TESTING
             }
         } else if (game.getBoard().pieceAt(move.getFrom()).getClass() == Pawn.class) {
             if (move.getTo().rowIndex() == 0 && game.getCurrentPlayer().getColor() == Enums.Color.Black) {     //black pawn promotion
